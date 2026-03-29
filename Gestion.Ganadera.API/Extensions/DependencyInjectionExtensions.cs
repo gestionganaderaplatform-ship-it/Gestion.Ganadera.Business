@@ -1,0 +1,48 @@
+using FluentValidation;
+using Gestion.Ganadera.Application.Abstractions.Interfaces;
+using Gestion.Ganadera.Application.Observability.Interfaces;
+using Gestion.Ganadera.Application.Features.Base.Interfaces;
+using Gestion.Ganadera.Application.Features.Base.Validators;
+using Gestion.Ganadera.Infrastructure.Persistence;
+using Gestion.Ganadera.Infrastructure.Persistence.Metadata;
+using Gestion.Ganadera.Infrastructure.Seguridad;
+using Gestion.Ganadera.Infrastructure.Services.Observability;
+using Gestion.Ganadera.Infrastructure.Services.Seguridad;
+
+namespace Gestion.Ganadera.API.Extensions
+{
+    /// <summary>
+    /// Conecta contratos de Application con implementaciones del proyecto y de infraestructura.
+    /// </summary>
+    public static class DependencyInjectionExtensions
+    {
+        public static WebApplicationBuilder AddProjectDependencyInjection(
+            this WebApplicationBuilder builder)
+        {
+            var repositoryAssembly = typeof(IBaseRepository<>).Assembly;
+            var serviceAssembly = typeof(IBaseService<,,>).Assembly;
+            var validatorsAssembly = typeof(CodigoRequestValidator).Assembly;
+            var persistenceAssembly = typeof(AppDbContext).Assembly;
+
+            builder.Services.Scan(scan => scan
+                .FromAssemblies(repositoryAssembly, persistenceAssembly, serviceAssembly, validatorsAssembly)
+                .AddClasses(classes => classes.AssignableTo(typeof(IBaseRepository<>)))
+                    .AsImplementedInterfaces()
+                    .WithScopedLifetime()
+                .AddClasses(classes => classes.AssignableTo(typeof(IBaseService<,,>)))
+                    .AsImplementedInterfaces()
+                    .WithScopedLifetime()
+                .AddClasses(classes => classes.AssignableTo(typeof(IValidator<>)))
+                    .AsImplementedInterfaces()
+                    .WithScopedLifetime()
+            );
+
+            builder.Services.AddScoped<IEntityValidationMetadata, EfEntityValidationMetadata>();
+            builder.Services.AddScoped<IEntitySchemaMetadata, EfEntitySchemaMetadata>();
+            builder.Services.AddScoped<IRequestMetricsService, RequestMetricsService>();
+            builder.Services.AddScoped<ISecurityEventService, SecurityEventService>();
+
+            return builder;
+        }
+    }
+}
