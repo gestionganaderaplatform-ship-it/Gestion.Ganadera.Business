@@ -1,8 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Reflection;
 using Gestion.Ganadera.Application.Features.Base.Interfaces;
 using Gestion.Ganadera.Infrastructure.Persistence.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gestion.Ganadera.Infrastructure.Persistence.Repositories.Base
 {
@@ -146,7 +146,9 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Repositories.Base
 
         public async Task<List<TEntity>> ConsultarPorForanea<TProperty>(string propiedadForanea, TProperty valorForaneo)
         {
-            var propertyInfo = typeof(TEntity).GetProperty(propiedadForanea, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            var propertyInfo = typeof(TEntity).GetProperty(
+                propiedadForanea,
+                BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
             var parameter = Expression.Parameter(typeof(TEntity), "x");
             var property = Expression.Property(parameter, propertyInfo!);
             var constant = Expression.Constant(valorForaneo, typeof(TProperty));
@@ -161,7 +163,9 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Repositories.Base
             return await _context.Set<TEntity>().FindAsync(codigo) != null;
         }
 
-        public async Task<(List<TProperty> Existentes, List<TProperty> NoExistentes)> ExistenVarios<TProperty>(IEnumerable<TProperty> codigos, string propiedadClave)
+        public async Task<(List<TProperty> Existentes, List<TProperty> NoExistentes)> ExistenVarios<TProperty>(
+            IEnumerable<TProperty> codigos,
+            string propiedadClave)
         {
             var codigosUnicos = codigos
                 .Distinct()
@@ -178,14 +182,14 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Repositories.Base
             return (existentes, noExistentes);
         }
 
-        public async Task<(List<TEntity> Items, int TotalRegistros)> ObtenerPorPaginado(int pagina, int tamañoPagina)
+        public async Task<(List<TEntity> Items, int TotalRegistros)> ObtenerPorPaginado(int pagina, int tamanoPagina)
         {
             var query = _context.Set<TEntity>().AsQueryable();
 
             int totalRegistros = await query.CountAsync();
-            List<TEntity> items = await query
-                .Skip((pagina - 1) * tamañoPagina)
-                .Take(tamañoPagina)
+            List<TEntity> items = await AplicarOrdenPredeterminado(query)
+                .Skip((pagina - 1) * tamanoPagina)
+                .Take(tamanoPagina)
                 .ToListAsync();
 
             return (items, totalRegistros);
@@ -216,7 +220,7 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Repositories.Base
         {
             var query = ConstruirConsultaFiltrada(filtros);
             var totalRegistros = await query.CountAsync();
-            var items = await query
+            var items = await AplicarOrdenPredeterminado(query)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -235,7 +239,8 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Repositories.Base
             {
                 var propiedadInfo = tipoEntidad.GetProperty(filtro.Key);
                 if (propiedadInfo == null)
-                    throw new InvalidOperationException($"La propiedad '{filtro.Key}' no existe en '{tipoEntidad.Name}'.");
+                    throw new InvalidOperationException(
+                        $"La propiedad '{filtro.Key}' no existe en '{tipoEntidad.Name}'.");
 
                 var propiedad = Expression.Property(parametro, propiedadInfo);
                 var tipoPropiedad = Nullable.GetUnderlyingType(propiedadInfo.PropertyType) ?? propiedadInfo.PropertyType;
@@ -269,6 +274,35 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Repositories.Base
             }
 
             return query;
+        }
+
+        private IQueryable<TEntity> AplicarOrdenPredeterminado(IQueryable<TEntity> query)
+        {
+            var entityType = _context.Model.FindEntityType(typeof(TEntity));
+            var primaryKey = entityType?.FindPrimaryKey()?.Properties.FirstOrDefault();
+
+            if (primaryKey is null)
+                return query;
+
+            var parametro = Expression.Parameter(typeof(TEntity), "x");
+            var propiedad = Expression.Call(
+                typeof(EF),
+                nameof(EF.Property),
+                [primaryKey.ClrType],
+                parametro,
+                Expression.Constant(primaryKey.Name));
+
+            var lambda = Expression.Lambda(propiedad, parametro);
+
+            var orderByMethod = typeof(Queryable)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Single(method =>
+                    method.Name == nameof(Queryable.OrderBy)
+                    && method.GetParameters().Length == 2);
+
+            var genericOrderByMethod = orderByMethod.MakeGenericMethod(typeof(TEntity), primaryKey.ClrType);
+
+            return (IQueryable<TEntity>)genericOrderByMethod.Invoke(null, [query, lambda])!;
         }
     }
 }
