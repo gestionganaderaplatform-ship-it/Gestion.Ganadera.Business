@@ -11,14 +11,14 @@ namespace Gestion.Ganadera.API.Configuration.Providers
         {
             get
             {
-                var value = GetClaimValue("cliente_codigo", "client_id");
+                var value = GetClaimValue("cliente_codigo");
                 return long.TryParse(value, out var numericId)
                     ? numericId
                     : null;
             }
         }
 
-        public string? ClientId => GetClaimValue("cliente_codigo_publico", "cliente_codigo", "client_id");
+        public string? ClientId => GetClaimValue("cliente_codigo_publico", "cliente_codigo");
 
         private string? GetClaimValue(params string[] claimTypes)
         {

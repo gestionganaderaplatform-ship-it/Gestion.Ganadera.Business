@@ -17,8 +17,7 @@ namespace Gestion.Ganadera.API.Middleware
                 context.User.FindFirstValue("sub");
 
             var clienteCodigo =
-                context.User.FindFirstValue("cliente_codigo") ??
-                context.User.FindFirstValue("client_id");
+                context.User.FindFirstValue("cliente_codigo");
 
             using (LogContext.PushProperty("Log_Aplicacion_Usuario", usuarioSub ?? string.Empty))
             using (LogContext.PushProperty("Cliente_Codigo", ParseClienteCodigo(clienteCodigo)))

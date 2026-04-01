@@ -14,8 +14,7 @@ namespace Gestion.Ganadera.API.Configuration.Providers
             "sub",
             "preferred_username",
             ClaimTypes.Email,
-            "email",
-            "client_id"
+            "email"
         ];
 
         private static readonly string[] PreferredNumericActorClaims =
