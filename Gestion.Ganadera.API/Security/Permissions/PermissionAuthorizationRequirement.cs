@@ -34,6 +34,14 @@ namespace Gestion.Ganadera.API.Security.Permissions
                 .SelectMany(SplitClaimValues)
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
+            // Mientras la API de negocio no maneje permisos finos por modulo o rol,
+            // un usuario autenticado sin claims de permission recibe acceso base.
+            if (grantedPermissions.Count == 0)
+            {
+                context.Succeed(requirement);
+                return Task.CompletedTask;
+            }
+
             if (grantedPermissions.Contains(requirement.Permission.ToString()))
             {
                 context.Succeed(requirement);

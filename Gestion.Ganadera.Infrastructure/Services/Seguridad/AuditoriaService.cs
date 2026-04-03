@@ -87,6 +87,18 @@ namespace Gestion.Ganadera.Infrastructure.Services.Seguridad
                 query = query.Where(item => item.Auditoria_Nombre_Tabla.Contains(tableName));
             }
 
+            if (!string.IsNullOrWhiteSpace(filtro.Auditoria_Modificado_Por))
+            {
+                var actorId = filtro.Auditoria_Modificado_Por.Trim();
+                query = query.Where(item => item.Auditoria_Modificado_Por.Contains(actorId));
+            }
+
+            if (!string.IsNullOrWhiteSpace(filtro.Auditoria_Valor_Clave))
+            {
+                var keyValue = filtro.Auditoria_Valor_Clave.Trim();
+                query = query.Where(item => item.Auditoria_Valor_Clave.Contains(keyValue));
+            }
+
             var entidades = await query.ToListAsync();
 
             return entidades
@@ -113,6 +125,34 @@ namespace Gestion.Ganadera.Infrastructure.Services.Seguridad
                 query = query.Where(item => item.Auditoria_Nombre_Tabla.Contains(normalizedTableName));
             }
 
+            if (filtros.TryGetValue(nameof(Auditoria.Auditoria_Modificado_Por), out var modifiedByValue) &&
+                modifiedByValue is string modifiedBy &&
+                !string.IsNullOrWhiteSpace(modifiedBy))
+            {
+                var normalizedModifiedBy = modifiedBy.Trim();
+                query = query.Where(item => item.Auditoria_Modificado_Por.Contains(normalizedModifiedBy));
+            }
+
+            if (filtros.TryGetValue(nameof(Auditoria.Auditoria_Valor_Clave), out var keyValueObject) &&
+                keyValueObject is string keyValue &&
+                !string.IsNullOrWhiteSpace(keyValue))
+            {
+                var normalizedKeyValue = keyValue.Trim();
+                query = query.Where(item => item.Auditoria_Valor_Clave.Contains(normalizedKeyValue));
+            }
+
+            if (filtros.TryGetValue(nameof(AuditoriaViewModel.Auditoria_Fecha_Modificado_Desde), out var modifiedFromValue) &&
+                TryResolveDate(modifiedFromValue, out var modifiedFrom))
+            {
+                query = query.Where(item => item.Auditoria_Fecha_Modificado >= modifiedFrom);
+            }
+
+            if (filtros.TryGetValue(nameof(AuditoriaViewModel.Auditoria_Fecha_Modificado_Hasta), out var modifiedToValue) &&
+                TryResolveDate(modifiedToValue, out var modifiedTo))
+            {
+                query = query.Where(item => item.Auditoria_Fecha_Modificado <= modifiedTo);
+            }
+
             return query;
         }
 
@@ -121,6 +161,22 @@ namespace Gestion.Ganadera.Infrastructure.Services.Seguridad
             return _dbContext.Auditorias
                 .AsNoTracking()
                 .Where(item => item.Cliente_Codigo == clientCode);
+        }
+
+        private static bool TryResolveDate(object? value, out DateTime resolved)
+        {
+            switch (value)
+            {
+                case DateTime dateTime:
+                    resolved = dateTime;
+                    return true;
+                case string rawValue when DateTime.TryParse(rawValue, out var parsed):
+                    resolved = parsed;
+                    return true;
+                default:
+                    resolved = default;
+                    return false;
+            }
         }
     }
 }

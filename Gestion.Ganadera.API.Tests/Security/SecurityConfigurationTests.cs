@@ -72,6 +72,26 @@ namespace Gestion.Ganadera.API.Tests.Security
         }
 
         [Fact]
+        public async Task PermissionAuthorizationHandler_Succeeds_WhenIdentityIsAuthenticatedWithoutPermissionClaims()
+        {
+            var requirement = new PermissionAuthorizationRequirement(ControllerPermission.GetPaged);
+            var handler = new PermissionAuthorizationHandler();
+            var identity = new ClaimsIdentity(
+            [
+                new Claim(ClaimTypes.NameIdentifier, "usuario-123")
+            ], authenticationType: "Bearer");
+
+            var context = new AuthorizationHandlerContext(
+                [requirement],
+                new ClaimsPrincipal(identity),
+                resource: null);
+
+            await handler.HandleAsync(context);
+
+            Assert.True(context.HasSucceeded);
+        }
+
+        [Fact]
         public async Task PermissionAuthorizationHandler_DoesNotSucceed_WhenIdentityIsUnauthenticated()
         {
             var requirement = new PermissionAuthorizationRequirement(ControllerPermission.GetAll);

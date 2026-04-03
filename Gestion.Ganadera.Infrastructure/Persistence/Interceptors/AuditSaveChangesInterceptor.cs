@@ -80,7 +80,7 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Interceptors
                             entry,
                             ahora,
                             _apiInfoProvider.ApiCodigo,
-                            _currentActorProvider.ActorId,
+                            _currentActorProvider.ActorEmail ?? _currentActorProvider.ActorId,
                             _currentClientProvider.ClientNumericId);
                         break;
                 }
@@ -95,7 +95,7 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Interceptors
             string? actorId,
             long? clienteCodigo)
         {
-            var tableName = entry.Metadata.GetTableName() ?? "TablaDesconocida";
+            var tableName = ResolveTableName(entry);
             var valoresAnteriores = entry.GetDatabaseValues();
             var valoresViejos = valoresAnteriores is null
                 ? string.Empty
@@ -125,6 +125,20 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Interceptors
             };
 
             context.Set<Auditoria>().Add(auditoria);
+        }
+
+        private static string ResolveTableName(EntityEntry<AuditableEntity> entry)
+        {
+            var tableName = entry.Metadata.GetTableName();
+            if (string.IsNullOrWhiteSpace(tableName))
+            {
+                return "TablaDesconocida";
+            }
+
+            var schema = entry.Metadata.GetSchema();
+            return string.IsNullOrWhiteSpace(schema)
+                ? tableName
+                : $"{schema}.{tableName}";
         }
     }
 }

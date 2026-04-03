@@ -6,6 +6,7 @@ namespace Gestion.Ganadera.Application.Abstractions.Interfaces
     public interface ICurrentActorProvider
     {
         string? ActorId { get; }
+        string? ActorEmail { get; }
         long? ActorNumericId { get; }
     }
 }

@@ -13,6 +13,8 @@ namespace Gestion.Ganadera.Application.Features.Seguridad.Auditoria.ViewModels
         public string? Auditoria_Nuevos_Valores { get; set; }
         public string? Auditoria_Modificado_Por { get; set; }
         public DateTime Auditoria_Fecha_Modificado { get; set; }
+        public DateTime? Auditoria_Fecha_Modificado_Desde { get; set; }
+        public DateTime? Auditoria_Fecha_Modificado_Hasta { get; set; }
     }
 
     public class AuditoriaCreateViewModel
@@ -26,6 +28,7 @@ namespace Gestion.Ganadera.Application.Features.Seguridad.Auditoria.ViewModels
     public class AuditoriaExportFilterViewModel
     {
         public string? Auditoria_Nombre_Tabla { get; set; }
+        public string? Auditoria_Valor_Clave { get; set; }
         public string? Auditoria_Modificado_Por { get; set; }
         public DateTime? Auditoria_Fecha_Modificado_Desde { get; set; }
         public DateTime? Auditoria_Fecha_Modificado_Hasta { get; set; }

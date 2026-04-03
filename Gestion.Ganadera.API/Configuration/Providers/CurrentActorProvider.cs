@@ -31,18 +31,15 @@ namespace Gestion.Ganadera.API.Configuration.Providers
         {
             get
             {
-                var user = _httpContextAccessor.HttpContext?.User;
-                if (user?.Identity?.IsAuthenticated != true)
+                var user = ResolveAuthenticatedUser();
+                if (user is null)
                 {
                     return null;
                 }
 
                 foreach (var claimType in PreferredActorClaims)
                 {
-                    var value = user.Claims
-                        .FirstOrDefault(claim =>
-                            string.Equals(claim.Type, claimType, StringComparison.OrdinalIgnoreCase))
-                        ?.Value;
+                    var value = ResolveClaimValue(user, claimType);
 
                     if (!string.IsNullOrWhiteSpace(value))
                     {
@@ -56,22 +53,34 @@ namespace Gestion.Ganadera.API.Configuration.Providers
             }
         }
 
+        public string? ActorEmail
+        {
+            get
+            {
+                var user = ResolveAuthenticatedUser();
+                if (user is null)
+                {
+                    return null;
+                }
+
+                return ResolveClaimValue(user, ClaimTypes.Email)
+                    ?? ResolveClaimValue(user, "email");
+            }
+        }
+
         public long? ActorNumericId
         {
             get
             {
-                var user = _httpContextAccessor.HttpContext?.User;
-                if (user?.Identity?.IsAuthenticated != true)
+                var user = ResolveAuthenticatedUser();
+                if (user is null)
                 {
                     return null;
                 }
 
                 foreach (var claimType in PreferredNumericActorClaims)
                 {
-                    var value = user.Claims
-                        .FirstOrDefault(claim =>
-                            string.Equals(claim.Type, claimType, StringComparison.OrdinalIgnoreCase))
-                        ?.Value;
+                    var value = ResolveClaimValue(user, claimType);
 
                     if (long.TryParse(value, out var numericId))
                     {
@@ -81,6 +90,22 @@ namespace Gestion.Ganadera.API.Configuration.Providers
 
                 return null;
             }
+        }
+
+        private ClaimsPrincipal? ResolveAuthenticatedUser()
+        {
+            var user = _httpContextAccessor.HttpContext?.User;
+            return user?.Identity?.IsAuthenticated == true
+                ? user
+                : null;
+        }
+
+        private static string? ResolveClaimValue(ClaimsPrincipal user, string claimType)
+        {
+            return user.Claims
+                .FirstOrDefault(claim =>
+                    string.Equals(claim.Type, claimType, StringComparison.OrdinalIgnoreCase))
+                ?.Value;
         }
     }
 }
