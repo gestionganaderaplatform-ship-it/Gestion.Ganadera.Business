@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
 using System.Text.Json;
 using Gestion.Ganadera.API.Middleware;
+using Gestion.Ganadera.Application.Abstractions.Interfaces;
 
 namespace Gestion.Ganadera.API.Extensions
 {
@@ -9,7 +10,7 @@ namespace Gestion.Ganadera.API.Extensions
     {
         public static WebApplication UseApiMiddlewares(this WebApplication app)
         {
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Test"))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -20,6 +21,37 @@ namespace Gestion.Ganadera.API.Extensions
                 app.MapGet("/openapi/v1.json", () => Results.Redirect("/swagger/v1/swagger.json"))
                     .ExcludeFromDescription();
             }
+
+            app.MapGet(
+                    "/",
+                    (IApiInfoProvider apiInfoProvider, IWebHostEnvironment environment) => Results.Ok(new
+                    {
+                        service = apiInfoProvider.ApiCodigo,
+                        environment = environment.EnvironmentName,
+                        status = "ok",
+                        docs = "/swagger",
+                        health = "/health",
+                        ready = "/health/ready"
+                    }))
+                .AllowAnonymous()
+                .ExcludeFromDescription();
+
+            app.MapGet(
+                    "/favicon.ico",
+                    (IWebHostEnvironment environment) =>
+                    {
+                        var webRootPath = string.IsNullOrWhiteSpace(environment.WebRootPath)
+                            ? Path.Combine(environment.ContentRootPath, "wwwroot")
+                            : environment.WebRootPath;
+
+                        var faviconPath = Path.Combine(webRootPath, "favicon.ico");
+
+                        return System.IO.File.Exists(faviconPath)
+                            ? Results.File(faviconPath, "image/x-icon")
+                            : Results.NoContent();
+                    })
+                .AllowAnonymous()
+                .ExcludeFromDescription();
 
             if (app.Configuration.GetValue<bool>("ForwardedHeaders:Enabled"))
             {

@@ -32,4 +32,11 @@
     <ProjectReference Include="..\Gestion.Ganadera.Application\Gestion.Ganadera.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\favicon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

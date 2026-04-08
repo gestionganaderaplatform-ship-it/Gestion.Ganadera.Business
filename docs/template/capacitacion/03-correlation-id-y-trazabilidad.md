@@ -33,7 +33,7 @@ Ese middleware:
 
 - `Gestion.Ganadera.API/Extensions/ProblemDetailsExtensions.cs`
 - `Gestion.Ganadera.API/ErrorHandling/ApiProblemDetailsFactory.cs`
-- `Gestion.Ganadera.API/Middleware/MetricsMiddleware.cs`
+- `Gestion.Ganadera.API/Middleware/MetricasMiddleware.cs`
 - `Gestion.Ganadera.API/Extensions/AuthenticationExtensions.cs`
 - `Gestion.Ganadera.API/Extensions/RateLimitingExtensions.cs`
 

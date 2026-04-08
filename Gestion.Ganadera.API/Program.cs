@@ -7,14 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Registra la infraestructura transversal y los servicios base del host.
 builder.AddApiServices();
-builder.AddLogging();
 builder.AddForwardedHeadersSupport();
 builder.AddRateLimiting();
 builder.AddAutoMapper();
 builder.AddOpenApiServices();
-builder.AddApiVersioningConfig();
 builder.AddControllers();
+builder.AddApiVersioningConfig();
 builder.AddSqlServerDatabase<AppDbContext>();
+builder.AddLogging();
 builder.AddProjectDependencyInjection();
 builder.AddHealthChecksServices();
 
@@ -39,12 +39,12 @@ var globalRateLimitEnabled = builder.Configuration.GetValue<bool>("RateLimiting:
 // El orden del pipeline garantiza trazabilidad, proteccion y observabilidad consistentes.
 app.UseApiMiddlewares();
 
+app.UseRequestMetrics();
+
 if (globalRateLimitEnabled)
 {
     app.UseRateLimiting();
 }
-
-app.UseRequestMetrics();
 
 var controllers = app.MapControllers();
 if (globalRateLimitEnabled)
@@ -52,11 +52,6 @@ if (globalRateLimitEnabled)
     controllers.RequireRateLimiting("GlobalRateLimit");
 }
 
-if (app.Environment.IsDevelopment())
-{
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await db.Database.MigrateAsync();
-}
+await app.ApplySafeDevelopmentMigrationsAsync<AppDbContext>();
 
 app.Run();

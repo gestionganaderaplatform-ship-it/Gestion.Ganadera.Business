@@ -39,7 +39,7 @@ namespace Gestion.Ganadera.API.Extensions
 
             builder.Services.AddScoped<IEntityValidationMetadata, EfEntityValidationMetadata>();
             builder.Services.AddScoped<IEntitySchemaMetadata, EfEntitySchemaMetadata>();
-            builder.Services.AddScoped<IRequestMetricsService, RequestMetricsService>();
+            builder.Services.AddScoped<IRequestMetricasService, RequestMetricasService>();
             builder.Services.AddScoped<ISecurityEventService, SecurityEventService>();
 
             return builder;

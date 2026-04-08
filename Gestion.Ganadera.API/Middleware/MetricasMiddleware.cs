@@ -8,18 +8,18 @@ namespace Gestion.Ganadera.API.Middleware
     /// <summary>
     /// Registra metricas basicas de cada request para monitoreo operativo del API.
     /// </summary>
-    public class MetricsMiddleware(
+    public class MetricasMiddleware(
         RequestDelegate next,
-        ILogger<MetricsMiddleware> logger,
+        ILogger<MetricasMiddleware> logger,
         IApiInfoProvider apiInfoProvider)
     {
         private readonly RequestDelegate _next = next;
-        private readonly ILogger<MetricsMiddleware> _logger = logger;
+        private readonly ILogger<MetricasMiddleware> _logger = logger;
         private readonly IApiInfoProvider _apiInfoProvider = apiInfoProvider;
 
         public async Task Invoke(
             HttpContext context,
-            IRequestMetricsService requestMetricsService)
+            IRequestMetricasService requestMetricasService)
         {
             var stopwatch = Stopwatch.StartNew();
 
@@ -32,14 +32,14 @@ namespace Gestion.Ganadera.API.Middleware
                 stopwatch.Stop();
                 await GuardarMetricaAsync(
                     context,
-                    requestMetricsService,
+                    requestMetricasService,
                     stopwatch.ElapsedMilliseconds);
             }
         }
 
         private async Task GuardarMetricaAsync(
             HttpContext context,
-            IRequestMetricsService requestMetricsService,
+            IRequestMetricasService requestMetricasService,
             long tiempoRespuestaMs)
         {
             try
@@ -60,7 +60,7 @@ namespace Gestion.Ganadera.API.Middleware
                     Metrica_Solicitud_Fecha_Creacion = DateTime.Now
                 };
 
-                await requestMetricsService.RegistrarAsync(metrica);
+                await requestMetricasService.RegistrarAsync(metrica);
             }
             catch (Exception ex)
             {

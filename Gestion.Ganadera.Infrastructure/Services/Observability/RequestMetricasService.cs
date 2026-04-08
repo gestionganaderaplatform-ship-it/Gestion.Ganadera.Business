@@ -9,10 +9,10 @@ namespace Gestion.Ganadera.Infrastructure.Services.Observability
     /// <summary>
     /// Persiste metricas tecnicas de requests usando la infraestructura configurada del template.
     /// </summary>
-    public sealed class RequestMetricsService(
+    public sealed class RequestMetricasService(
         AppDbContext context,
         IMapper mapper,
-        ICurrentClientProvider currentClientProvider) : IRequestMetricsService
+        ICurrentClientProvider currentClientProvider) : IRequestMetricasService
     {
         private readonly AppDbContext _context = context;
         private readonly IMapper _mapper = mapper;
@@ -23,7 +23,7 @@ namespace Gestion.Ganadera.Infrastructure.Services.Observability
             var entidad = _mapper.Map<Infrastructure.Observability.Models.MetricaSolicitud>(metrica);
             entidad.Cliente_Codigo ??= _currentClientProvider.ClientNumericId;
 
-            _context.Metrica_Solicitudes.Add(entidad);
+            _context.MetricasSolicitud.Add(entidad);
             await _context.SaveChangesAsync();
         }
     }

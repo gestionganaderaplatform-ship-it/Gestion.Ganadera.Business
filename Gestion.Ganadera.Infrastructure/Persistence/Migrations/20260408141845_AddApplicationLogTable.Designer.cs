@@ -4,6 +4,7 @@ using Gestion.Ganadera.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gestion.Ganadera.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260408141845_AddApplicationLogTable")]
+    partial class AddApplicationLogTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,13 +43,11 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Auditoria_Modificado_Por")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Auditoria_Nombre_Tabla")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Auditoria_Nuevos_Valores")
                         .IsRequired()
@@ -54,8 +55,7 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Auditoria_Valor_Clave")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Auditoria_Valores_Viejos")
                         .IsRequired()
@@ -210,13 +210,11 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Evento_Seguridad_CorrelationId")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Evento_Seguridad_Endpoint")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Evento_Seguridad_Fecha")
                         .ValueGeneratedOnAdd()
@@ -225,21 +223,17 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Evento_Seguridad_Ip")
                         .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Evento_Seguridad_Origin")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Evento_Seguridad_Tipo_Evento")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Evento_Seguridad_UserAgent")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Evento_Seguridad_Codigo");
 

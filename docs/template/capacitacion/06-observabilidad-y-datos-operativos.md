@@ -21,7 +21,7 @@ Usa `Serilog` y escribe en consola y base de datos.
 
 El middleware vive en:
 
-- `Gestion.Ganadera.API/Middleware/MetricsMiddleware.cs`
+- `Gestion.Ganadera.API/Middleware/MetricasMiddleware.cs`
 
 La persistencia de esas metricas se delega a un contrato de `Application`.
 Con eso, la capa HTTP no necesita conocer `DbContext` ni modelos tecnicos de infraestructura.

@@ -17,7 +17,8 @@ namespace Gestion.Ganadera.Infrastructure.Persistence
         private readonly ICurrentClientProvider? _currentClientProvider = currentClientProvider;
 
         public DbSet<Auditoria> Auditorias { get; set; } = null!;
-        public DbSet<MetricaSolicitud> Metrica_Solicitudes { get; set; } = null!;
+        public DbSet<LogAplicacion> Logs { get; set; } = null!;
+        public DbSet<MetricaSolicitud> MetricasSolicitud { get; set; } = null!;
         public DbSet<EventoSeguridad> Seguridad_Eventos => Set<EventoSeguridad>();
 
         private long? CurrentClientNumericId => _currentClientProvider?.ClientNumericId;
@@ -31,6 +32,8 @@ namespace Gestion.Ganadera.Infrastructure.Persistence
             modelBuilder.Entity<MetricaSolicitud>()
                 .HasQueryFilter(entity => IsClientScopeDisabled || entity.Cliente_Codigo == CurrentClientNumericId);
             modelBuilder.Entity<EventoSeguridad>()
+                .HasQueryFilter(entity => IsClientScopeDisabled || entity.Cliente_Codigo == CurrentClientNumericId);
+            modelBuilder.Entity<LogAplicacion>()
                 .HasQueryFilter(entity => IsClientScopeDisabled || entity.Cliente_Codigo == CurrentClientNumericId);
             base.OnModelCreating(modelBuilder);
         }

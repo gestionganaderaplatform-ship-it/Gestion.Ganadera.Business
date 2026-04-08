@@ -16,6 +16,27 @@ public class EventoSeguridadConfiguration : IEntityTypeConfiguration<EventoSegur
               .HasMaxLength(100)
               .IsRequired();
 
+        entity.Property(x => x.Evento_Seguridad_Tipo_Evento)
+              .HasMaxLength(100)
+              .IsRequired();
+
+        entity.Property(x => x.Evento_Seguridad_Ip)
+              .HasMaxLength(45)
+              .IsRequired();
+
+        entity.Property(x => x.Evento_Seguridad_Endpoint)
+              .HasMaxLength(500)
+              .IsRequired();
+
+        entity.Property(x => x.Evento_Seguridad_Origin)
+              .HasMaxLength(200);
+
+        entity.Property(x => x.Evento_Seguridad_UserAgent)
+              .HasMaxLength(1000);
+
+        entity.Property(x => x.Evento_Seguridad_CorrelationId)
+              .HasMaxLength(100);
+
         entity.Property(x => x.Evento_Seguridad_Fecha)
               .HasDefaultValueSql("SYSDATETIME()");
 

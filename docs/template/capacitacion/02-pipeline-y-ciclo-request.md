@@ -63,4 +63,4 @@ En este template la validacion se distribuye asi:
 - `Gestion.Ganadera.API/Extensions/ApiMiddlewareExtensions.cs`
 - `Gestion.Ganadera.API/Middleware/CorrelationIdMiddleware.cs`
 - `Gestion.Ganadera.API/Middleware/ErrorHandlerMiddleware.cs`
-- `Gestion.Ganadera.API/Middleware/MetricsMiddleware.cs`
+- `Gestion.Ganadera.API/Middleware/MetricasMiddleware.cs`

@@ -1,4 +1,7 @@
+using System.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Gestion.Ganadera.Infrastructure.Persistence.Interceptors;
 
 namespace Gestion.Ganadera.API.Extensions;
@@ -34,6 +37,106 @@ public static class DatabaseExtensions
             );
         });
         return builder;
+    }
+
+    /// <summary>
+    /// Aplica migraciones automaticas solo cuando el estado de la base y del ensamblado son compatibles.
+    /// Evita reintentar una cadena de migraciones distinta sobre bases ya inicializadas.
+    /// </summary>
+    public static async Task ApplySafeDevelopmentMigrationsAsync<TDbContext>(
+        this WebApplication app)
+        where TDbContext : DbContext
+    {
+        if (!app.Environment.IsDevelopment() && !app.Environment.IsEnvironment("Test"))
+        {
+            return;
+        }
+
+        await using var scope = app.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<TDbContext>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<TDbContext>>();
+
+        if (!await db.Database.CanConnectAsync())
+        {
+            await db.Database.MigrateAsync();
+            return;
+        }
+
+        var migrationsAssembly = db.Database.GetService<IMigrationsAssembly>();
+        var availableMigrations = migrationsAssembly.Migrations.Keys.ToHashSet(StringComparer.Ordinal);
+        var appliedMigrations = (await db.Database.GetAppliedMigrationsAsync()).ToArray();
+        var unknownAppliedMigrations = appliedMigrations
+            .Where(migrationId => !availableMigrations.Contains(migrationId))
+            .ToArray();
+
+        if (unknownAppliedMigrations.Length > 0)
+        {
+            logger.LogWarning(
+                "Se omite Database.Migrate para {DbContext} porque la base contiene migraciones no presentes en el ensamblado actual: {MigrationIds}",
+                typeof(TDbContext).Name,
+                string.Join(", ", unknownAppliedMigrations));
+            return;
+        }
+
+        if (appliedMigrations.Length == 0 && await HasUnexpectedUserTablesAsync(db))
+        {
+            logger.LogWarning(
+                "Se omite Database.Migrate para {DbContext} porque la base ya tiene tablas de usuario pero no registra historial de migraciones.",
+                typeof(TDbContext).Name);
+            return;
+        }
+
+        await db.Database.MigrateAsync();
+    }
+
+    private static async Task<bool> HasUnexpectedUserTablesAsync(DbContext dbContext)
+    {
+        var connection = dbContext.Database.GetDbConnection();
+        var shouldCloseConnection = connection.State != ConnectionState.Open;
+
+        if (shouldCloseConnection)
+        {
+            await connection.OpenAsync();
+        }
+
+        try
+        {
+            var userTables = new List<string>();
+
+            await using var command = connection.CreateCommand();
+            command.CommandText =
+                """
+                SELECT TABLE_SCHEMA, TABLE_NAME
+                FROM INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_TYPE = 'BASE TABLE'
+                  AND TABLE_NAME <> '__EFMigrationsHistory'
+                """;
+
+            await using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                userTables.Add($"{reader.GetString(0)}.{reader.GetString(1)}");
+            }
+
+            if (userTables.Count == 0)
+            {
+                return false;
+            }
+
+            var ignorableBootstrapTables = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "Seguridad.Log_Aplicacion"
+            };
+
+            return userTables.Any(tableName => !ignorableBootstrapTables.Contains(tableName));
+        }
+        finally
+        {
+            if (shouldCloseConnection)
+            {
+                await connection.CloseAsync();
+            }
+        }
     }
 }
 

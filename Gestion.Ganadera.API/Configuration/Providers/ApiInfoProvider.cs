@@ -11,6 +11,24 @@ namespace Gestion.Ganadera.API.Configuration.Providers
     {
         private readonly ApiInfoOptions _options = options.Value;
 
-        public string ApiCodigo => _options.Codigo;
+        public string ApiCodigo =>
+            ResolveApiCodigo(_options.Codigo);
+
+        private static string ResolveApiCodigo(string fallback)
+        {
+            var explicitApiCodigo = Environment.GetEnvironmentVariable("ApiInfo__Codigo");
+            if (!string.IsNullOrWhiteSpace(explicitApiCodigo))
+            {
+                return explicitApiCodigo;
+            }
+
+            var azureSiteName = Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME");
+            if (!string.IsNullOrWhiteSpace(azureSiteName))
+            {
+                return azureSiteName;
+            }
+
+            return fallback;
+        }
     }
 }

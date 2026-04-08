@@ -20,6 +20,8 @@ namespace Gestion.Ganadera.Application.Features.Seguridad.Auditoria.Validators
 
     public class AuditoriaViewValidator : StandardEntityValidator<AuditoriaViewModel>
     {
+        private const int MaxTableNameLength = 64;
+        private const int MaxActorLength = 120;
         private readonly IAuditoriaService _service;
 
         public AuditoriaViewValidator(
@@ -40,11 +42,50 @@ namespace Gestion.Ganadera.Application.Features.Seguridad.Auditoria.Validators
                 .LessThanOrEqualTo(DateTime.Now)
                 .WithMessage(AuditoriaValidationMessages.ModifiedDateCannotBeFuture);
 
+            When(x => !string.IsNullOrWhiteSpace(x.Auditoria_Nombre_Tabla), () =>
+            {
+                RuleFor(x => x.Auditoria_Nombre_Tabla)
+                    .MaximumLength(MaxTableNameLength)
+                    .WithMessage(AuditoriaValidationMessages.TableNameTooLong(MaxTableNameLength))
+                    .Matches(@"^[a-zA-Z0-9._\-\s]+$")
+                    .WithMessage(AuditoriaValidationMessages.TableNameInvalidFormat);
+            });
+
             When(x => !string.IsNullOrWhiteSpace(x.Auditoria_Modificado_Por), () =>
             {
                 RuleFor(x => x.Auditoria_Modificado_Por)
+                    .MaximumLength(MaxActorLength)
+                    .WithMessage(AuditoriaValidationMessages.ActorIdentifierTooLong(MaxActorLength))
                     .Matches(RegexPatterns.IdentificadorActor)
                     .WithMessage(AuditoriaValidationMessages.ActorIdentifierInvalidFormat);
+            });
+
+            RuleFor(x => x)
+                .Custom((model, context) =>
+                {
+                    var tieneFechaInicial = model.Auditoria_Fecha_Modificado_Desde.HasValue;
+                    var tieneFechaFinal = model.Auditoria_Fecha_Modificado_Hasta.HasValue;
+
+                    if (!tieneFechaInicial && !tieneFechaFinal)
+                    {
+                        context.AddFailure(string.Empty, AuditoriaValidationMessages.QueryDateRangeRequired);
+                        return;
+                    }
+
+                    if (!tieneFechaInicial || !tieneFechaFinal)
+                    {
+                        context.AddFailure(string.Empty, AuditoriaValidationMessages.QueryDateRangeIncomplete);
+                    }
+                });
+
+            When(
+                x => x.Auditoria_Fecha_Modificado_Desde.HasValue &&
+                     x.Auditoria_Fecha_Modificado_Hasta.HasValue,
+                () =>
+            {
+                RuleFor(x => x.Auditoria_Fecha_Modificado_Hasta)
+                    .GreaterThanOrEqualTo(x => x.Auditoria_Fecha_Modificado_Desde!.Value)
+                    .WithMessage(AuditoriaValidationMessages.InvalidModifiedDateRange);
             });
         }
     }
@@ -53,6 +94,8 @@ namespace Gestion.Ganadera.Application.Features.Seguridad.Auditoria.Validators
     {
         private const int MaxExportRangeDays = 90;
         private const int MaxExportRecords = 10_000;
+        private const int MaxTableNameLength = 64;
+        private const int MaxActorLength = 120;
         private readonly IAuditoriaService _service;
 
         public AuditoriaExportFilterValidator(
@@ -70,9 +113,20 @@ namespace Gestion.Ganadera.Application.Features.Seguridad.Auditoria.Validators
                 .NotNull()
                 .WithMessage(AuditoriaValidationMessages.ExportDateToRequired);
 
+            When(x => !string.IsNullOrWhiteSpace(x.Auditoria_Nombre_Tabla), () =>
+            {
+                RuleFor(x => x.Auditoria_Nombre_Tabla)
+                    .MaximumLength(MaxTableNameLength)
+                    .WithMessage(AuditoriaValidationMessages.TableNameTooLong(MaxTableNameLength))
+                    .Matches(@"^[a-zA-Z0-9._\-\s]+$")
+                    .WithMessage(AuditoriaValidationMessages.TableNameInvalidFormat);
+            });
+
             When(x => !string.IsNullOrWhiteSpace(x.Auditoria_Modificado_Por), () =>
             {
                 RuleFor(x => x.Auditoria_Modificado_Por)
+                    .MaximumLength(MaxActorLength)
+                    .WithMessage(AuditoriaValidationMessages.ActorIdentifierTooLong(MaxActorLength))
                     .Matches(RegexPatterns.IdentificadorActor)
                     .WithMessage(AuditoriaValidationMessages.ActorIdentifierInvalidFormat);
             });
