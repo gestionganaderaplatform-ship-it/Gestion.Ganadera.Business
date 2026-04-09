@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -50,100 +50,19 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Migrations
                 UPDATE [Seguridad].[Auditoria]
                 SET [Auditoria_Modificado_Por] = LEFT([Auditoria_Modificado_Por], 200)
                 WHERE LEN([Auditoria_Modificado_Por]) > 200;
+
+                -- Alter columns to specific lengths safely
+                ALTER TABLE [Seguridad].[Seguridad_Evento] ALTER COLUMN [Evento_Seguridad_UserAgent] NVARCHAR(1000) NULL;
+                ALTER TABLE [Seguridad].[Seguridad_Evento] ALTER COLUMN [Evento_Seguridad_Tipo_Evento] NVARCHAR(100) NOT NULL;
+                ALTER TABLE [Seguridad].[Seguridad_Evento] ALTER COLUMN [Evento_Seguridad_Origin] NVARCHAR(200) NULL;
+                ALTER TABLE [Seguridad].[Seguridad_Evento] ALTER COLUMN [Evento_Seguridad_Ip] NVARCHAR(45) NOT NULL;
+                ALTER TABLE [Seguridad].[Seguridad_Evento] ALTER COLUMN [Evento_Seguridad_Endpoint] NVARCHAR(500) NOT NULL;
+                ALTER TABLE [Seguridad].[Seguridad_Evento] ALTER COLUMN [Evento_Seguridad_CorrelationId] NVARCHAR(100) NULL;
+
+                ALTER TABLE [Seguridad].[Auditoria] ALTER COLUMN [Auditoria_Valor_Clave] NVARCHAR(200) NOT NULL;
+                ALTER TABLE [Seguridad].[Auditoria] ALTER COLUMN [Auditoria_Nombre_Tabla] NVARCHAR(150) NOT NULL;
+                ALTER TABLE [Seguridad].[Auditoria] ALTER COLUMN [Auditoria_Modificado_Por] NVARCHAR(200) NOT NULL;
                 """);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Evento_Seguridad_UserAgent",
-                schema: "Seguridad",
-                table: "Seguridad_Evento",
-                type: "nvarchar(1000)",
-                maxLength: 1000,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Evento_Seguridad_Tipo_Evento",
-                schema: "Seguridad",
-                table: "Seguridad_Evento",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Evento_Seguridad_Origin",
-                schema: "Seguridad",
-                table: "Seguridad_Evento",
-                type: "nvarchar(200)",
-                maxLength: 200,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Evento_Seguridad_Ip",
-                schema: "Seguridad",
-                table: "Seguridad_Evento",
-                type: "nvarchar(45)",
-                maxLength: 45,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Evento_Seguridad_Endpoint",
-                schema: "Seguridad",
-                table: "Seguridad_Evento",
-                type: "nvarchar(500)",
-                maxLength: 500,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Evento_Seguridad_CorrelationId",
-                schema: "Seguridad",
-                table: "Seguridad_Evento",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Auditoria_Valor_Clave",
-                schema: "Seguridad",
-                table: "Auditoria",
-                type: "nvarchar(200)",
-                maxLength: 200,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Auditoria_Nombre_Tabla",
-                schema: "Seguridad",
-                table: "Auditoria",
-                type: "nvarchar(150)",
-                maxLength: 150,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Auditoria_Modificado_Por",
-                schema: "Seguridad",
-                table: "Auditoria",
-                type: "nvarchar(200)",
-                maxLength: 200,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
         }
 
         /// <inheritdoc />
@@ -154,93 +73,63 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Migrations
                 schema: "Seguridad",
                 table: "Seguridad_Evento",
                 type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(1000)",
-                oldMaxLength: 1000,
-                oldNullable: true);
+                nullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Evento_Seguridad_Tipo_Evento",
                 schema: "Seguridad",
                 table: "Seguridad_Evento",
                 type: "nvarchar(max)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(100)",
-                oldMaxLength: 100);
+                nullable: false);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Evento_Seguridad_Origin",
                 schema: "Seguridad",
                 table: "Seguridad_Evento",
                 type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(200)",
-                oldMaxLength: 200,
-                oldNullable: true);
+                nullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Evento_Seguridad_Ip",
                 schema: "Seguridad",
                 table: "Seguridad_Evento",
                 type: "nvarchar(max)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(45)",
-                oldMaxLength: 45);
+                nullable: false);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Evento_Seguridad_Endpoint",
                 schema: "Seguridad",
                 table: "Seguridad_Evento",
                 type: "nvarchar(max)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(500)",
-                oldMaxLength: 500);
+                nullable: false);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Evento_Seguridad_CorrelationId",
                 schema: "Seguridad",
                 table: "Seguridad_Evento",
                 type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(100)",
-                oldMaxLength: 100,
-                oldNullable: true);
+                nullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Auditoria_Valor_Clave",
                 schema: "Seguridad",
                 table: "Auditoria",
                 type: "nvarchar(max)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(200)",
-                oldMaxLength: 200);
+                nullable: false);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Auditoria_Nombre_Tabla",
                 schema: "Seguridad",
                 table: "Auditoria",
                 type: "nvarchar(max)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(150)",
-                oldMaxLength: 150);
+                nullable: false);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Auditoria_Modificado_Por",
                 schema: "Seguridad",
                 table: "Auditoria",
                 type: "nvarchar(max)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(200)",
-                oldMaxLength: 200);
+                nullable: false);
         }
     }
 }

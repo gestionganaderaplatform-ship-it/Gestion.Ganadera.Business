@@ -1,7 +1,10 @@
 using AutoMapper;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 using Gestion.Ganadera.Application.Abstractions.Interfaces;
 using Gestion.Ganadera.Application.Features.Seguridad.Auditoria.Interfaces;
+using Gestion.Ganadera.Application.Features.Seguridad.Auditoria.Messages;
 using Gestion.Ganadera.Application.Features.Seguridad.Auditoria.ViewModels;
 using Gestion.Ganadera.Domain.Features.Seguridad;
 using Gestion.Ganadera.Infrastructure.Persistence;
@@ -105,6 +108,20 @@ namespace Gestion.Ganadera.Infrastructure.Services.Seguridad
                 .Where(x => x.Auditoria_Fecha_Modificado <= filtro.Auditoria_Fecha_Modificado_Hasta!.Value)
                 .OrderByDescending(x => x.Auditoria_Fecha_Modificado)
                 .ToList();
+        }
+
+        protected override void ValidarExportacion(IReadOnlyCollection<Auditoria> entidades)
+        {
+            if (entidades.Count > 0)
+            {
+                return;
+            }
+
+            throw new ValidationException([
+                new ValidationFailure(
+                    nameof(AuditoriaExportFilterViewModel.Auditoria_Fecha_Modificado_Desde),
+                    AuditoriaValidationMessages.ExportNoDataFound)
+            ]);
         }
 
         private IQueryable<Auditoria> BuildFilteredScopedQuery(Dictionary<string, object> filtros)

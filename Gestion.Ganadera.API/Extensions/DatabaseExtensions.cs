@@ -55,9 +55,20 @@ public static class DatabaseExtensions
         await using var scope = app.Services.CreateAsyncScope();
         var db = scope.ServiceProvider.GetRequiredService<TDbContext>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<TDbContext>>();
+        var forceAutoMigrate = app.Configuration.GetValue<bool>("Database:ForceAutoMigrate");
 
         if (!await db.Database.CanConnectAsync())
         {
+            await db.Database.MigrateAsync();
+            return;
+        }
+
+        if (forceAutoMigrate)
+        {
+            logger.LogWarning(
+                "Se forzara Database.Migrate para {DbContext} porque Database:ForceAutoMigrate esta habilitado en {EnvironmentName}.",
+                typeof(TDbContext).Name,
+                app.Environment.EnvironmentName);
             await db.Database.MigrateAsync();
             return;
         }

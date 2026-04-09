@@ -13,67 +13,54 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Migrations
             migrationBuilder.EnsureSchema(
                 name: "Seguridad");
 
-            migrationBuilder.CreateTable(
-                name: "Auditoria",
-                schema: "Seguridad",
-                columns: table => new
-                {
-                    Auditoria_Codigo = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Auditoria_Api_Codigo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Auditoria_Nombre_Tabla = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Auditoria_Valor_Clave = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Auditoria_Valores_Viejos = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Auditoria_Nuevos_Valores = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Auditoria_Modificado_Por = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Auditoria_Fecha_Modificado = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Auditoria", x => x.Auditoria_Codigo);
-                });
+            migrationBuilder.Sql(
+                """
+                IF OBJECT_ID(N'[Seguridad].[Auditoria]', N'U') IS NULL
+                BEGIN
+                    CREATE TABLE [Seguridad].[Auditoria] (
+                        [Auditoria_Codigo] bigint NOT NULL IDENTITY,
+                        [Auditoria_Api_Codigo] nvarchar(100) NOT NULL,
+                        [Auditoria_Nombre_Tabla] nvarchar(max) NOT NULL,
+                        [Auditoria_Valor_Clave] nvarchar(max) NOT NULL,
+                        [Auditoria_Valores_Viejos] nvarchar(max) NOT NULL,
+                        [Auditoria_Nuevos_Valores] nvarchar(max) NOT NULL,
+                        [Auditoria_Modificado_Por] nvarchar(max) NOT NULL,
+                        [Auditoria_Fecha_Modificado] datetime2 NOT NULL,
+                        CONSTRAINT [PK_Auditoria] PRIMARY KEY ([Auditoria_Codigo])
+                    );
+                END;
 
-            migrationBuilder.CreateTable(
-                name: "Metrica_Solicitud",
-                schema: "Seguridad",
-                columns: table => new
-                {
-                    Metrica_Solicitud_Codigo = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Metrica_Solicitud_Api_Codigo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Metrica_Solicitud_Ruta_Request = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Metrica_Solicitud_Metodo_Http = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Metrica_Solicitud_Codigo_Estado = table.Column<int>(type: "int", nullable: false),
-                    Metrica_Solicitud_Tiempo_Respuesta_Ms = table.Column<long>(type: "bigint", nullable: false),
-                    Metrica_Solicitud_Correlation_Id = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Metrica_Solicitud_Fecha_Creacion = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "SYSDATETIME()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Metrica_Solicitud", x => x.Metrica_Solicitud_Codigo);
-                });
+                IF OBJECT_ID(N'[Seguridad].[Metrica_Solicitud]', N'U') IS NULL
+                BEGIN
+                    CREATE TABLE [Seguridad].[Metrica_Solicitud] (
+                        [Metrica_Solicitud_Codigo] bigint NOT NULL IDENTITY,
+                        [Metrica_Solicitud_Api_Codigo] nvarchar(100) NOT NULL,
+                        [Metrica_Solicitud_Ruta_Request] nvarchar(500) NOT NULL,
+                        [Metrica_Solicitud_Metodo_Http] nvarchar(10) NOT NULL,
+                        [Metrica_Solicitud_Codigo_Estado] int NOT NULL,
+                        [Metrica_Solicitud_Tiempo_Respuesta_Ms] bigint NOT NULL,
+                        [Metrica_Solicitud_Correlation_Id] nvarchar(100) NULL,
+                        [Metrica_Solicitud_Fecha_Creacion] datetime2 NOT NULL DEFAULT (SYSDATETIME()),
+                        CONSTRAINT [PK_Metrica_Solicitud] PRIMARY KEY ([Metrica_Solicitud_Codigo])
+                    );
+                END;
 
-            migrationBuilder.CreateTable(
-                name: "Seguridad_Evento",
-                schema: "Seguridad",
-                columns: table => new
-                {
-                    Evento_Seguridad_Codigo = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Evento_Seguridad_Api_Codigo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Evento_Seguridad_Tipo_Evento = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Evento_Seguridad_Ip = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Evento_Seguridad_Endpoint = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Evento_Seguridad_Origin = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Evento_Seguridad_UserAgent = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Evento_Seguridad_CorrelationId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Evento_Seguridad_Fecha = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "SYSDATETIME()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Seguridad_Evento", x => x.Evento_Seguridad_Codigo);
-                });
-
+                IF OBJECT_ID(N'[Seguridad].[Seguridad_Evento]', N'U') IS NULL
+                BEGIN
+                    CREATE TABLE [Seguridad].[Seguridad_Evento] (
+                        [Evento_Seguridad_Codigo] bigint NOT NULL IDENTITY,
+                        [Evento_Seguridad_Api_Codigo] nvarchar(100) NOT NULL,
+                        [Evento_Seguridad_Tipo_Evento] nvarchar(max) NOT NULL,
+                        [Evento_Seguridad_Ip] nvarchar(max) NOT NULL,
+                        [Evento_Seguridad_Endpoint] nvarchar(max) NOT NULL,
+                        [Evento_Seguridad_Origin] nvarchar(max) NULL,
+                        [Evento_Seguridad_UserAgent] nvarchar(max) NULL,
+                        [Evento_Seguridad_CorrelationId] nvarchar(max) NULL,
+                        [Evento_Seguridad_Fecha] datetime2 NOT NULL DEFAULT (SYSDATETIME()),
+                        CONSTRAINT [PK_Seguridad_Evento] PRIMARY KEY ([Evento_Seguridad_Codigo])
+                    );
+                END;
+                """);
         }
 
         /// <inheritdoc />

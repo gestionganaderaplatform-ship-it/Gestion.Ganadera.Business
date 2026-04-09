@@ -15,6 +15,7 @@ namespace Gestion.Ganadera.Application.Features.Seguridad.Auditoria.Messages
         public const string ExportDateFromRequired = "La fecha inicial es obligatoria para exportar auditoria.";
         public const string ExportDateToRequired = "La fecha final es obligatoria para exportar auditoria.";
         public const string ExportDateRangeExceeded = "El rango maximo permitido para exportar es de 90 dias.";
+        public const string ExportNoDataFound = "No existen datos de auditoria para exportar con el rango seleccionado.";
 
         public static string ActorIdentifierTooLong(int maxCaracteres)
             => $"El usuario no puede superar los {maxCaracteres} caracteres.";

@@ -1,7 +1,7 @@
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using FluentValidation;
 using Gestion.Ganadera.API.ErrorHandling.Messages;
 using Gestion.Ganadera.API.Extensions;
 
@@ -53,11 +53,27 @@ namespace Gestion.Ganadera.API.Middleware
                     _ => ApiErrorMessages.InternalErrorTitle
                 };
 
+                var detail = _env.IsDevelopment()
+                    ? error.Message
+                    : error switch
+                    {
+                        ValidationException => ApiErrorMessages.ValidationFailedDetail,
+                        BadHttpRequestException or JsonException => ApiErrorMessages.InvalidJsonTitle,
+                        UnauthorizedAccessException => ApiErrorMessages.UnauthorizedTitle,
+                        KeyNotFoundException => ApiErrorMessages.RequestedRecordNotFound,
+                        _ => ApiErrorMessages.UnexpectedErrorDetail
+                    };
+
+                var validationErrors = error is ValidationException validationException
+                    ? validationException.Errors.Select(x => new { x.PropertyName, x.ErrorMessage })
+                    : null;
+
                 var problem = context.ToProblemDetails(
-                       statusCode,
-                       title,
-                       _env.IsDevelopment() ? error.Message : ApiErrorMessages.UnexpectedErrorDetail
-                 );
+                    statusCode,
+                    title,
+                    detail,
+                    validationErrors
+                );
 
                 context.Response!.StatusCode = statusCode;
                 context.Response.ContentType = "application/problem+json";

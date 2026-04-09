@@ -10,84 +10,50 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "Aplicacion");
+            migrationBuilder.Sql(
+                """
+                IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'Aplicacion')
+                BEGIN
+                    EXEC('CREATE SCHEMA [Aplicacion]')
+                END
 
-            migrationBuilder.CreateTable(
-                name: "Menu_Navegacion",
-                schema: "Aplicacion",
-                columns: table => new
-                {
-                    Menu_Navegacion_Codigo = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Menu_Navegacion_Padre_Codigo = table.Column<long>(type: "bigint", nullable: true),
-                    Menu_Navegacion_Clave = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Menu_Navegacion_Titulo = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Menu_Navegacion_Icono = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Menu_Navegacion_Tipo = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Menu_Navegacion_Ruta = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
-                    Menu_Navegacion_Accion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Menu_Navegacion_Orden = table.Column<int>(type: "int", nullable: false),
-                    Menu_Navegacion_Esta_Activo = table.Column<bool>(type: "bit", nullable: false),
-                    Menu_Navegacion_Requiere_Cuenta_Padre = table.Column<bool>(type: "bit", nullable: false),
-                    Menu_Navegacion_Permiso_Requerido = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Menu_Navegacion", x => x.Menu_Navegacion_Codigo);
-                    table.ForeignKey(
-                        name: "FK_Menu_Navegacion_Menu_Navegacion_Menu_Navegacion_Padre_Codigo",
-                        column: x => x.Menu_Navegacion_Padre_Codigo,
-                        principalSchema: "Aplicacion",
-                        principalTable: "Menu_Navegacion",
-                        principalColumn: "Menu_Navegacion_Codigo",
-                        onDelete: ReferentialAction.Restrict);
-                });
+                IF OBJECT_ID(N'[Aplicacion].[Menu_Navegacion]', N'U') IS NULL
+                BEGIN
+                    CREATE TABLE [Aplicacion].[Menu_Navegacion] (
+                        [Menu_Navegacion_Codigo] bigint NOT NULL IDENTITY,
+                        [Menu_Navegacion_Padre_Codigo] bigint NULL,
+                        [Menu_Navegacion_Clave] nvarchar(100) NOT NULL,
+                        [Menu_Navegacion_Titulo] nvarchar(150) NOT NULL,
+                        [Menu_Navegacion_Icono] nvarchar(100) NOT NULL,
+                        [Menu_Navegacion_Tipo] nvarchar(30) NOT NULL,
+                        [Menu_Navegacion_Ruta] nvarchar(250) NULL,
+                        [Menu_Navegacion_Accion] nvarchar(50) NULL,
+                        [Menu_Navegacion_Orden] int NOT NULL,
+                        [Menu_Navegacion_Esta_Activo] bit NOT NULL,
+                        [Menu_Navegacion_Requiere_Cuenta_Padre] bit NOT NULL,
+                        [Menu_Navegacion_Permiso_Requerido] nvarchar(150) NULL,
+                        CONSTRAINT [PK_Menu_Navegacion] PRIMARY KEY ([Menu_Navegacion_Codigo]),
+                        CONSTRAINT [FK_Menu_Navegacion_Menu_Navegacion_Menu_Navegacion_Padre_Codigo] FOREIGN KEY ([Menu_Navegacion_Padre_Codigo]) REFERENCES [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Codigo])
+                    );
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Menu_Navegacion_Menu_Navegacion_Clave",
-                schema: "Aplicacion",
-                table: "Menu_Navegacion",
-                column: "Menu_Navegacion_Clave",
-                unique: true);
+                    CREATE UNIQUE INDEX [IX_Menu_Navegacion_Menu_Navegacion_Clave] ON [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Clave]);
+                    CREATE INDEX [IX_Menu_Navegacion_Menu_Navegacion_Padre_Codigo_Menu_Navegacion_Orden] ON [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Padre_Codigo], [Menu_Navegacion_Orden]);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Menu_Navegacion_Menu_Navegacion_Padre_Codigo_Menu_Navegacion_Orden",
-                schema: "Aplicacion",
-                table: "Menu_Navegacion",
-                columns: new[] { "Menu_Navegacion_Padre_Codigo", "Menu_Navegacion_Orden" });
-
-            migrationBuilder.InsertData(
-                schema: "Aplicacion",
-                table: "Menu_Navegacion",
-                columns: new[]
-                {
-                    "Menu_Navegacion_Codigo",
-                    "Menu_Navegacion_Accion",
-                    "Menu_Navegacion_Clave",
-                    "Menu_Navegacion_Esta_Activo",
-                    "Menu_Navegacion_Icono",
-                    "Menu_Navegacion_Orden",
-                    "Menu_Navegacion_Padre_Codigo",
-                    "Menu_Navegacion_Permiso_Requerido",
-                    "Menu_Navegacion_Requiere_Cuenta_Padre",
-                    "Menu_Navegacion_Ruta",
-                    "Menu_Navegacion_Tipo",
-                    "Menu_Navegacion_Titulo"
-                },
-                values: new object[,]
-                {
-                    { 1L, null, "inicio", true, "pi pi-home", 10, null, null, false, "/inicio", "route", "Inicio" },
-                    { 2L, null, "seguridad", true, "pi pi-shield", 20, null, null, false, "/seguridad", "group", "Seguridad" },
-                    { 3L, null, "configuracion", true, "pi pi-cog", 30, null, null, false, "/configuracion", "group", "Configuracion" },
-                    { 4L, "logout", "cerrar-sesion", true, "pi pi-sign-out", 40, null, null, false, null, "action", "Cerrar sesion" },
-                    { 5L, null, "seguridad-auditoria", true, "pi pi-history", 10, 2L, null, false, "/seguridad/auditoria", "route", "Auditoria" },
-                    { 6L, null, "seguridad-sesiones", true, "pi pi-desktop", 20, 2L, null, false, "/seguridad/sesiones", "route", "Sesiones" },
-                    { 7L, null, "seguridad-accesos", true, "pi pi-key", 30, 2L, null, false, "/seguridad/accesos", "route", "Accesos" },
-                    { 8L, null, "configuracion-preferencias", true, "pi pi-sliders-h", 10, 3L, null, false, "/configuracion/preferencias", "route", "Preferencias" },
-                    { 9L, null, "configuracion-cuenta", true, "pi pi-user", 20, 3L, null, false, "/configuracion/cuenta", "route", "Cuenta" },
-                    { 10L, null, "configuracion-delegados", true, "pi pi-users", 30, 3L, null, true, "/configuracion/delegados", "route", "Delegados" }
-                });
+                    -- Seed Data
+                    SET IDENTITY_INSERT [Aplicacion].[Menu_Navegacion] ON;
+                    INSERT [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Codigo], [Menu_Navegacion_Accion], [Menu_Navegacion_Clave], [Menu_Navegacion_Esta_Activo], [Menu_Navegacion_Icono], [Menu_Navegacion_Orden], [Menu_Navegacion_Padre_Codigo], [Menu_Navegacion_Permiso_Requerido], [Menu_Navegacion_Requiere_Cuenta_Padre], [Menu_Navegacion_Ruta], [Menu_Navegacion_Tipo], [Menu_Navegacion_Titulo]) VALUES (1, NULL, N'inicio', 1, N'pi pi-home', 10, NULL, NULL, 0, N'/inicio', N'route', N'Inicio')
+                    INSERT [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Codigo], [Menu_Navegacion_Accion], [Menu_Navegacion_Clave], [Menu_Navegacion_Esta_Activo], [Menu_Navegacion_Icono], [Menu_Navegacion_Orden], [Menu_Navegacion_Padre_Codigo], [Menu_Navegacion_Permiso_Requerido], [Menu_Navegacion_Requiere_Cuenta_Padre], [Menu_Navegacion_Ruta], [Menu_Navegacion_Tipo], [Menu_Navegacion_Titulo]) VALUES (2, NULL, N'seguridad', 1, N'pi pi-shield', 20, NULL, NULL, 0, N'/seguridad', N'group', N'Seguridad')
+                    INSERT [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Codigo], [Menu_Navegacion_Accion], [Menu_Navegacion_Clave], [Menu_Navegacion_Esta_Activo], [Menu_Navegacion_Icono], [Menu_Navegacion_Orden], [Menu_Navegacion_Padre_Codigo], [Menu_Navegacion_Permiso_Requerido], [Menu_Navegacion_Requiere_Cuenta_Padre], [Menu_Navegacion_Ruta], [Menu_Navegacion_Tipo], [Menu_Navegacion_Titulo]) VALUES (3, NULL, N'configuracion', 1, N'pi pi-cog', 30, NULL, NULL, 0, N'/configuracion', N'group', N'Configuración')
+                    INSERT [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Codigo], [Menu_Navegacion_Accion], [Menu_Navegacion_Clave], [Menu_Navegacion_Esta_Activo], [Menu_Navegacion_Icono], [Menu_Navegacion_Orden], [Menu_Navegacion_Padre_Codigo], [Menu_Navegacion_Permiso_Requerido], [Menu_Navegacion_Requiere_Cuenta_Padre], [Menu_Navegacion_Ruta], [Menu_Navegacion_Tipo], [Menu_Navegacion_Titulo]) VALUES (4, N'logout', N'cerrar-sesion', 1, N'pi pi-sign-out', 40, NULL, NULL, 0, NULL, N'action', N'Cerrar sesión')
+                    INSERT [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Codigo], [Menu_Navegacion_Accion], [Menu_Navegacion_Clave], [Menu_Navegacion_Esta_Activo], [Menu_Navegacion_Icono], [Menu_Navegacion_Orden], [Menu_Navegacion_Padre_Codigo], [Menu_Navegacion_Permiso_Requerido], [Menu_Navegacion_Requiere_Cuenta_Padre], [Menu_Navegacion_Ruta], [Menu_Navegacion_Tipo], [Menu_Navegacion_Titulo]) VALUES (5, NULL, N'seguridad-auditoria', 1, N'pi pi-history', 10, 2, NULL, 0, N'/seguridad/auditoria', N'route', N'Auditoría')
+                    INSERT [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Codigo], [Menu_Navegacion_Accion], [Menu_Navegacion_Clave], [Menu_Navegacion_Esta_Activo], [Menu_Navegacion_Icono], [Menu_Navegacion_Orden], [Menu_Navegacion_Padre_Codigo], [Menu_Navegacion_Permiso_Requerido], [Menu_Navegacion_Requiere_Cuenta_Padre], [Menu_Navegacion_Ruta], [Menu_Navegacion_Tipo], [Menu_Navegacion_Titulo]) VALUES (6, NULL, N'seguridad-sesiones', 1, N'pi pi-desktop', 20, 2, NULL, 0, N'/seguridad/sesiones', N'route', N'Sesiones')
+                    INSERT [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Codigo], [Menu_Navegacion_Accion], [Menu_Navegacion_Clave], [Menu_Navegacion_Esta_Activo], [Menu_Navegacion_Icono], [Menu_Navegacion_Orden], [Menu_Navegacion_Padre_Codigo], [Menu_Navegacion_Permiso_Requerido], [Menu_Navegacion_Requiere_Cuenta_Padre], [Menu_Navegacion_Ruta], [Menu_Navegacion_Tipo], [Menu_Navegacion_Titulo]) VALUES (7, NULL, N'seguridad-accesos', 1, N'pi pi-key', 30, 2, NULL, 0, N'/seguridad/accesos', N'route', N'Accesos')
+                    INSERT [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Codigo], [Menu_Navegacion_Accion], [Menu_Navegacion_Clave], [Menu_Navegacion_Esta_Activo], [Menu_Navegacion_Icono], [Menu_Navegacion_Orden], [Menu_Navegacion_Padre_Codigo], [Menu_Navegacion_Permiso_Requerido], [Menu_Navegacion_Requiere_Cuenta_Padre], [Menu_Navegacion_Ruta], [Menu_Navegacion_Tipo], [Menu_Navegacion_Titulo]) VALUES (8, NULL, N'configuracion-preferencias', 1, N'pi pi-sliders-h', 10, 3, NULL, 0, N'/configuracion/preferencias', N'route', N'Preferencias')
+                    INSERT [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Codigo], [Menu_Navegacion_Accion], [Menu_Navegacion_Clave], [Menu_Navegacion_Esta_Activo], [Menu_Navegacion_Icono], [Menu_Navegacion_Orden], [Menu_Navegacion_Padre_Codigo], [Menu_Navegacion_Permiso_Requerido], [Menu_Navegacion_Requiere_Cuenta_Padre], [Menu_Navegacion_Ruta], [Menu_Navegacion_Tipo], [Menu_Navegacion_Titulo]) VALUES (9, NULL, N'configuracion-cuenta', 1, N'pi pi-user', 20, 3, NULL, 0, N'/configuracion/cuenta', N'route', N'Cuenta')
+                    INSERT [Aplicacion].[Menu_Navegacion] ([Menu_Navegacion_Codigo], [Menu_Navegacion_Accion], [Menu_Navegacion_Clave], [Menu_Navegacion_Esta_Activo], [Menu_Navegacion_Icono], [Menu_Navegacion_Orden], [Menu_Navegacion_Padre_Codigo], [Menu_Navegacion_Permiso_Requerido], [Menu_Navegacion_Requiere_Cuenta_Padre], [Menu_Navegacion_Ruta], [Menu_Navegacion_Tipo], [Menu_Navegacion_Titulo]) VALUES (10, NULL, N'configuracion-delegados', 1, N'pi pi-users', 30, 3, NULL, 1, N'/configuracion/delegados', N'route', N'Delegados')
+                    SET IDENTITY_INSERT [Aplicacion].[Menu_Navegacion] OFF;
+                END;
+                """);
         }
 
         /// <inheritdoc />
