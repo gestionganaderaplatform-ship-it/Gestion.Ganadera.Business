@@ -2,6 +2,11 @@
 
 Este directorio contiene scripts SQL relacionados con la limpieza y retencion de informacion tecnica.
 
+## Tambien contiene
+
+- `Despliegue/`
+  Scripts SQL idempotentes para desplegar migraciones antes de publicar `Test` o `Produccion`.
+
 ## Reglas definidas
 
 | Tipo      | Tabla                        | Retencion |

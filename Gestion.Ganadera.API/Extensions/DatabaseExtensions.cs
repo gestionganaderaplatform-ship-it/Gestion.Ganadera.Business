@@ -40,14 +40,14 @@ public static class DatabaseExtensions
     }
 
     /// <summary>
-    /// Aplica migraciones automaticas solo cuando el estado de la base y del ensamblado son compatibles.
-    /// Evita reintentar una cadena de migraciones distinta sobre bases ya inicializadas.
+    /// Aplica migraciones automaticas solo en desarrollo local.
+    /// En ambientes compartidos o de despliegue se debe usar script idempotente previo.
     /// </summary>
     public static async Task ApplySafeDevelopmentMigrationsAsync<TDbContext>(
         this WebApplication app)
         where TDbContext : DbContext
     {
-        if (!app.Environment.IsDevelopment() && !app.Environment.IsEnvironment("Test"))
+        if (!app.Environment.IsDevelopment())
         {
             return;
         }
