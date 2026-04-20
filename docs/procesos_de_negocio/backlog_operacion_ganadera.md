@@ -36,7 +36,7 @@ Este documento sirve como puente para mantener alineados los contextos entre los
 
 ## Tarea 5: Historial Básico del Animal
 **Objetivo:** Lectura estructurada para la trazabilidad de negocio.
-- [ ] Construir endpoint de sólo lectura para reconstruir la cronología del animal apuntando a un listado filtrado de la tabla `Evento_Ganadero`.
+- [x] Construir endpoint de sólo lectura para reconstruir la cronología del animal apuntando a un listado filtrado de la tabla `Evento_Ganadero`.
 
 ## Tarea 6: Base para el Segundo Proceso (Compra)
 **Objetivo:** Clonar la estructura operativa del Registro Existente para Compra.

@@ -9,7 +9,7 @@ public interface IAnimalConsultaRepository
         int tamañoPagina, 
         CancellationToken cancellationToken = default);
 
-    Task<AnimalViewModel?> Consultar(
-        long animalCodigo, 
-        CancellationToken cancellationToken = default);
+    Task<AnimalViewModel?> Consultar(long animalCodigo, CancellationToken cancellationToken = default);
+
+    Task<IEnumerable<AnimalHistorialViewModel>> ObtenerHistorialAsync(long animalCodigo, CancellationToken cancellationToken = default);
 }

@@ -4,6 +4,7 @@ using Gestion.Ganadera.API.ErrorHandling;
 using Gestion.Ganadera.API.Requests.Helpers;
 using Gestion.Ganadera.API.Security.Permissions;
 using Gestion.Ganadera.API.Security.Planes;
+using Gestion.Ganadera.Application.Features.Ganaderia.Procesos.RegistroExistente.Interfaces;
 using Gestion.Ganadera.Application.Features.Ganaderia.Procesos.RegistroExistente.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ namespace Gestion.Ganadera.API.Controllers.Ganaderia.Procesos;
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/ganaderia/procesos/registro-existente")]
 [ControllerPermissions(ControllerPermission.Create)]
-public class RegistroExistenteController : ControllerBase
+public class RegistroExistenteController(IRegistroExistenteService service) : ControllerBase
 {
     [HttpPost("validar")]
     [RequirePermission(ControllerPermission.Create)]
@@ -41,7 +42,6 @@ public class RegistroExistenteController : ControllerBase
     [RequirePermission(ControllerPermission.Create)]
     public async Task<IActionResult> Registrar(
         [FromServices] IValidator<RegistrarExistenteRequest> validator,
-        [FromServices] Application.Features.Ganaderia.Procesos.RegistroExistente.Interfaces.IRegistroExistenteService service,
         [FromBody] RegistrarExistenteRequest request,
         CancellationToken cancellationToken = default)
     {

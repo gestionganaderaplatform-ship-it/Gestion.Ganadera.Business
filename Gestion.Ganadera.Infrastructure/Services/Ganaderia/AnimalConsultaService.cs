@@ -22,4 +22,9 @@ public class AnimalConsultaService(IAnimalConsultaRepository repository) : IAnim
     {
         return repository.Consultar(animalCodigo, cancellationToken);
     }
+
+    public Task<IEnumerable<AnimalHistorialViewModel>> ObtenerHistorialAsync(long animalCodigo, CancellationToken cancellationToken = default)
+    {
+        return repository.ObtenerHistorialAsync(animalCodigo, cancellationToken);
+    }
 }

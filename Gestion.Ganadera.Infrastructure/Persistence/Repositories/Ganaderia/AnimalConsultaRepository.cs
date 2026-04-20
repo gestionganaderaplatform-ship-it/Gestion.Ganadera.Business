@@ -73,4 +73,27 @@ public class AnimalConsultaRepository(AppDbContext context) : IAnimalConsultaRep
 
         return await query.FirstOrDefaultAsync(cancellationToken);
     }
+
+    public async Task<IEnumerable<AnimalHistorialViewModel>> ObtenerHistorialAsync(long animalCodigo, CancellationToken cancellationToken = default)
+    {
+        var eventos = await (from ea in context.EventosGanaderosAnimal.AsNoTracking()
+                             join e in context.EventosGanaderos.AsNoTracking() 
+                               on ea.Evento_Ganadero_Codigo equals e.Evento_Ganadero_Codigo
+                             where ea.Animal_Codigo == animalCodigo
+                             orderby e.Evento_Ganadero_Fecha descending
+                             select new AnimalHistorialViewModel
+                             {
+                                 Evento_Ganadero_Animal_Codigo = ea.Evento_Ganadero_Animal_Codigo,
+                                 Evento_Ganadero_Codigo = e.Evento_Ganadero_Codigo,
+                                 Evento_Ganadero_Tipo = e.Evento_Ganadero_Tipo,
+                                 Evento_Ganadero_Fecha = e.Evento_Ganadero_Fecha,
+                                 Evento_Ganadero_Animal_Estado_Afectacion = ea.Evento_Ganadero_Animal_Estado_Afectacion,
+                                 Evento_Ganadero_Registrado_Por = e.Evento_Ganadero_Registrado_Por,
+                                 Evento_Ganadero_Observacion = e.Evento_Ganadero_Observacion,
+                                 Evento_Ganadero_Es_Correccion = e.Evento_Ganadero_Es_Correccion,
+                                 Evento_Ganadero_Es_Anulacion = e.Evento_Ganadero_Es_Anulacion
+                             }).ToListAsync(cancellationToken);
+
+        return eventos;
+    }
 }

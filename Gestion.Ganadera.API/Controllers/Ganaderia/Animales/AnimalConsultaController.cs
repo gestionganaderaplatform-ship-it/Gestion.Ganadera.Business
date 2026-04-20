@@ -59,4 +59,14 @@ public class AnimalConsultaController(IAnimalConsultaService service) : Controll
 
         return Ok(snapshot);
     }
+
+    [HttpGet("{codigo:long}/historial")]
+    [RequirePermission(ControllerPermission.GetById)]
+    public async Task<IActionResult> ObtenerHistorial(
+        [FromRoute] long codigo,
+        CancellationToken cancellationToken = default)
+    {
+        var historial = await service.ObtenerHistorialAsync(codigo, cancellationToken);
+        return Ok(historial);
+    }
 }
