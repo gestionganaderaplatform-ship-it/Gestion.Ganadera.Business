@@ -15,6 +15,7 @@ using Gestion.Ganadera.Infrastructure.Services.Seguridad;
 using Gestion.Ganadera.Application.Features.Ganaderia.Animales.Interfaces;
 using Gestion.Ganadera.Infrastructure.Persistence.Repositories.Ganaderia;
 using Gestion.Ganadera.Application.Features.Ganaderia.Procesos.RegistroExistente.Interfaces;
+using Gestion.Ganadera.Application.Features.Ganaderia.Procesos.Compra.Interfaces;
 using Gestion.Ganadera.Infrastructure.Persistence.Repositories.Ganaderia.Procesos;
 using Gestion.Ganadera.Infrastructure.Services.Ganaderia.Procesos;
 
@@ -57,6 +58,8 @@ namespace Gestion.Ganadera.API.Extensions
             builder.Services.AddScoped<IValidarRegistroExistenteRepository, ValidarRegistroExistenteRepository>();
             builder.Services.AddScoped<IRegistroExistenteRepository, RegistroExistenteRepository>();
             builder.Services.AddScoped<IRegistroExistenteService, RegistroExistenteService>();
+            builder.Services.AddScoped<ICompraRepository, CompraRepository>();
+            builder.Services.AddScoped<ICompraService, CompraService>();
 
             return builder;
         }
