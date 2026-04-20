@@ -25,14 +25,14 @@ Este documento sirve como puente para mantener alineados los contextos entre los
 
 ## Tarea 4: Caso de Uso "Registrar Existente" (Transacción Completa)
 **Objetivo:** Materializar la inyección en la base de datos de manera Atómica.
-- [ ] Crear el Command central (`RegistrarExistenteCommand`).
-- [ ] Orquestar en un entorno transaccional atómico el proceso de escritura de 5 bloques:
+- [x] Crear el Command central (`RegistrarExistenteCommand`).
+- [x] Orquestar en un entorno transaccional atómico el proceso de escritura de 5 bloques:
       1. Crear registro en tabla `Animal`.
       2. Crear registro en tabla `Identificador_Animal`.
       3. Crear registro maestro en tabla `Evento_Ganadero`.
       4. Pivotar relaciones en tabla `Evento_Ganadero_Animal`.
       5. Guardar la fotografía del evento en `Evento_Detalle_Registro_Existente`.
-- [ ] Consolidar cambios con EF Core asegurando atomicidad o un Rollback completo en caso de fallos.
+- [x] Consolidar cambios con EF Core asegurando atomicidad o un Rollback completo en caso de fallos.
 
 ## Tarea 5: Historial Básico del Animal
 **Objetivo:** Lectura estructurada para la trazabilidad de negocio.

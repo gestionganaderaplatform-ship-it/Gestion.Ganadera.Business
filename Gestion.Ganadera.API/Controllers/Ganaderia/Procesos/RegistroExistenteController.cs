@@ -36,4 +36,31 @@ public class RegistroExistenteController : ControllerBase
 
         return Ok();
     }
+
+    [HttpPost]
+    [RequirePermission(ControllerPermission.Create)]
+    public async Task<IActionResult> Registrar(
+        [FromServices] IValidator<RegistrarExistenteRequest> validator,
+        [FromServices] Application.Features.Ganaderia.Procesos.RegistroExistente.Interfaces.IRegistroExistenteService service,
+        [FromBody] RegistrarExistenteRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var validacion = await ControllerValidatorHelper.ValidarEntidad(validator, request);
+        
+        if (validacion is not null)
+        {
+            return ApiProblemDetailsFactory.BadRequest(
+                 HttpContext,
+                 validacion
+             );
+        }
+
+        var exito = await service.CrearRegistroAsync(request, cancellationToken);
+
+        return exito 
+            ? StatusCode(StatusCodes.Status201Created)
+            : ApiProblemDetailsFactory.BadRequest(
+                HttpContext,
+                detail: API.ErrorHandling.Messages.ApiErrorMessages.OperationFailed);
+    }
 }

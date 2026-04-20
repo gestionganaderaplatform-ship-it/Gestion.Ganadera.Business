@@ -16,6 +16,7 @@ using Gestion.Ganadera.Application.Features.Ganaderia.Animales.Interfaces;
 using Gestion.Ganadera.Infrastructure.Persistence.Repositories.Ganaderia;
 using Gestion.Ganadera.Application.Features.Ganaderia.Procesos.RegistroExistente.Interfaces;
 using Gestion.Ganadera.Infrastructure.Persistence.Repositories.Ganaderia.Procesos;
+using Gestion.Ganadera.Infrastructure.Services.Ganaderia.Procesos;
 
 namespace Gestion.Ganadera.API.Extensions
 {
@@ -54,6 +55,8 @@ namespace Gestion.Ganadera.API.Extensions
             builder.Services.AddScoped<IAnimalConsultaRepository, AnimalConsultaRepository>();
             builder.Services.AddScoped<IAnimalConsultaService, AnimalConsultaService>();
             builder.Services.AddScoped<IValidarRegistroExistenteRepository, ValidarRegistroExistenteRepository>();
+            builder.Services.AddScoped<IRegistroExistenteRepository, RegistroExistenteRepository>();
+            builder.Services.AddScoped<IRegistroExistenteService, RegistroExistenteService>();
 
             return builder;
         }
