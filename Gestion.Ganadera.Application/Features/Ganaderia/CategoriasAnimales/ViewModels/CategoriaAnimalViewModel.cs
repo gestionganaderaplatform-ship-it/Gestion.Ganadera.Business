@@ -1,0 +1,30 @@
+using Gestion.Ganadera.Application.Abstractions.Interfaces;
+using CategoriaAnimalEntity = Gestion.Ganadera.Domain.Features.Ganaderia.CategoriaAnimal;
+
+namespace Gestion.Ganadera.Application.Features.Ganaderia.CategoriasAnimales.ViewModels;
+
+public class CategoriaAnimalViewModel : IMapsToEntity<CategoriaAnimalEntity>
+{
+    public long Categoria_Animal_Codigo { get; set; }
+    public string Categoria_Animal_Nombre { get; set; } = string.Empty;
+    public string? Categoria_Animal_Sexo_Esperado { get; set; }
+    public int Categoria_Animal_Orden { get; set; }
+    public bool Categoria_Animal_Activa { get; set; } = true;
+}
+
+public class CategoriaAnimalCreateViewModel : IMapsToEntity<CategoriaAnimalEntity>
+{
+    public string Categoria_Animal_Nombre { get; set; } = string.Empty;
+    public string? Categoria_Animal_Sexo_Esperado { get; set; }
+    public int Categoria_Animal_Orden { get; set; }
+    public bool Categoria_Animal_Activa { get; set; } = true;
+}
+
+public class CategoriaAnimalUpdateViewModel : IMapsToEntity<CategoriaAnimalEntity>
+{
+    public long Categoria_Animal_Codigo { get; set; }
+    public string Categoria_Animal_Nombre { get; set; } = string.Empty;
+    public string? Categoria_Animal_Sexo_Esperado { get; set; }
+    public int Categoria_Animal_Orden { get; set; }
+    public bool Categoria_Animal_Activa { get; set; } = true;
+}

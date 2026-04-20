@@ -1,0 +1,12 @@
+using Gestion.Ganadera.Application.Features.Base.Interfaces;
+using FincaEntity = Gestion.Ganadera.Domain.Features.Ganaderia.Finca;
+
+namespace Gestion.Ganadera.Application.Features.Ganaderia.Fincas.Interfaces;
+
+public interface IFincaRepository : IBaseRepository<FincaEntity>
+{
+    Task<bool> ExisteNombreAsync(
+        string fincaNombre,
+        long? fincaCodigoExcluir = null,
+        CancellationToken cancellationToken = default);
+}
