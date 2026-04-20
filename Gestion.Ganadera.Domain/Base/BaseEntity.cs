@@ -6,7 +6,7 @@ namespace Gestion.Ganadera.Domain.Base
     public class BaseEntity
     {
         public Guid Codigo_Publico { get; set; } = Guid.NewGuid();
-        public Guid Codigo_Cliente { get; set; }
+        public long? Cliente_Codigo { get; set; }
     }
 }
 

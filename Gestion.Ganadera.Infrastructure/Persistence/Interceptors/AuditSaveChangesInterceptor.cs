@@ -55,6 +55,12 @@ namespace Gestion.Ganadera.Infrastructure.Persistence.Interceptors
                 switch (entry.State)
                 {
                     case EntityState.Added:
+                        if (!entry.Entity.Cliente_Codigo.HasValue &&
+                            _currentClientProvider.ClientNumericId.HasValue)
+                        {
+                            entry.Entity.Cliente_Codigo = _currentClientProvider.ClientNumericId.Value;
+                        }
+
                         if (entry.Entity.Fecha_Creado == default)
                         {
                             entry.Entity.Fecha_Creado = ahora;

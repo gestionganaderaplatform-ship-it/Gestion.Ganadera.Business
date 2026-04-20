@@ -5,6 +5,34 @@ Este documento consolida lo tecnico que si aparece en la documentacion generada 
 
 ## Definido en esta base documental
 
+### Primer corte ejecutado
+- El primer corte real se bajo para `Registro de existente`.
+- El esquema usado es `Ganaderia`.
+- Las tablas minimas creadas para este corte son:
+  - `Finca`
+  - `Potrero`
+  - `Categoria_Animal`
+  - `Rango_Edad`
+  - `Tipo_Identificador`
+  - `Animal`
+  - `Identificador_Animal`
+  - `Evento_Ganadero`
+  - `Evento_Ganadero_Animal`
+  - `Evento_Detalle_Registro_Existente`
+- `Animal` conserva el estado actual minimo para operar: finca actual, potrero actual, categoria actual, sexo y estado activo.
+- `Animal` conserva fecha inicial de ingreso como snapshot del animal, no como nombre de evento incrustado en la tabla.
+- `Rango_Edad` no queda como snapshot en `Animal`; queda en el detalle del proceso de registro.
+- La auditoria heredada se aplico en las tablas creadas de este primer corte con `Fecha_Creado`, `Fecha_Modificado`, `Creado_Por` y `Modificado_Por`.
+- El alcance por tenant del modulo se maneja con `Cliente_Codigo` heredado desde la base comun.
+- El filtro por tenant debe aplicarse tanto a tablas maestras como a tablas transaccionales del modulo usando `Cliente_Codigo`.
+- La siembra automatica por cliente nuevo se cerro para `Tipo_Identificador`, `Categoria_Animal` y `Rango_Edad`.
+- La base inicial de `Categoria_Animal` queda en: `Becerra`, `Becerro`, `Novilla`, `Torete`, `Novillo`, `Vaca` y `Toro`.
+- La base inicial de `Rango_Edad` queda en: `0 a 6 meses`, `7 a 12 meses`, `13 a 24 meses`, `25 a 36 meses` y `Mas de 36 meses`.
+- En este primer corte no se bajaron columnas `Codigo_Publico` por entidad para Ganaderia.
+- En este primer corte se mantuvo la regla de nomenclatura: cada campo propio arranca con el nombre de su tabla.
+- Se simplificaron palabras innecesarias, pero sin quitar el prefijo de tabla.
+- Se quitaron fechas de registro duplicadas en tablas donde la auditoria heredada ya cubre la creacion.
+
 ### Modelo funcional-tecnico
 - El dominio debe conservar una identidad estable del animal.
 - La operacion debe quedar sostenida por un tronco de eventos.
@@ -48,6 +76,7 @@ Este documento consolida lo tecnico que si aparece en la documentacion generada 
 - Usar esquema `Ganaderia`.
 - Bajar las entidades del dominio ganadero a tablas con naming alineado al patron definido en la documentacion tecnica.
 - Mantener EF Core con clases limpias en C# y nombres fisicos alineados al modelo propuesto.
+- `Categoria_Animal` y `Rango_Edad` se mantienen como catalogos por cliente, con una base inicial simple y editable por cada tenant.
 
 ### Modelo logico
 - Entidades maestras y operativas:
@@ -93,8 +122,8 @@ Este documento consolida lo tecnico que si aparece en la documentacion generada 
 - Las tablas, columnas e indices del modelo logico todavia no equivalen a un fisico validado.
 
 ### EF Core real
-- Las convenciones EF Core estan documentadas como guia de implementacion.
-- No equivalen todavia a configuraciones reales validadas.
+- Para el primer corte de `Registro de existente` ya existen entidades, configuraciones y migracion inicial.
+- Lo pendiente es contrastar si el resto del modulo ganadero futuro mantiene exactamente la misma linea.
 
 ### Contratos finales
 - Los contratos API estan en nivel funcional.
@@ -102,11 +131,12 @@ Este documento consolida lo tecnico que si aparece en la documentacion generada 
 
 ### Auditoria exacta
 - La base funcional exige trazabilidad total.
-- El bloque exacto de auditoria por tabla y por entidad no quedo cerrado al 100 por ciento dentro de esta base documental.
+- Para el primer corte ya se cerro auditoria heredada en las tablas creadas.
+- Sigue pendiente validar si futuras tablas del modulo usaran exactamente el mismo bloque sin variaciones.
 
 ### Naming y estructura
-- El naming fisico del modulo ganadero y parte del modelo logico quedaron como propuesta de aterrizaje.
-- No debe asumirse todavia como version final cerrada.
+- El naming del primer corte ya fue bajado a tablas reales bajo el esquema `Ganaderia`.
+- Para fases siguientes, todavia debe validarse si no aparece un ajuste adicional.
 
 ## Lectura operativa
 - Si se va a contrastar documentacion contra implementacion futura, esta base tecnica debe leerse junto con `03_elementos_pendientes_por_validar.md`.

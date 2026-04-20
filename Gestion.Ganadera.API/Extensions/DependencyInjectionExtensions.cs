@@ -1,12 +1,14 @@
 using FluentValidation;
 using Gestion.Ganadera.Application.Abstractions.Interfaces;
 using Gestion.Ganadera.Application.Features.Navegacion.Interfaces;
+using Gestion.Ganadera.Application.Features.Ganaderia.Interfaces;
 using Gestion.Ganadera.Application.Observability.Interfaces;
 using Gestion.Ganadera.Application.Features.Base.Interfaces;
 using Gestion.Ganadera.Application.Features.Base.Validators;
 using Gestion.Ganadera.Infrastructure.Persistence;
 using Gestion.Ganadera.Infrastructure.Persistence.Metadata;
 using Gestion.Ganadera.Infrastructure.Seguridad;
+using Gestion.Ganadera.Infrastructure.Services.Ganaderia;
 using Gestion.Ganadera.Infrastructure.Services.Navegacion;
 using Gestion.Ganadera.Infrastructure.Services.Observability;
 using Gestion.Ganadera.Infrastructure.Services.Seguridad;
@@ -41,6 +43,7 @@ namespace Gestion.Ganadera.API.Extensions
 
             builder.Services.AddScoped<IEntityValidationMetadata, EfEntityValidationMetadata>();
             builder.Services.AddScoped<IEntitySchemaMetadata, EfEntitySchemaMetadata>();
+            builder.Services.AddScoped<IGanaderiaCatalogBootstrapService, GanaderiaCatalogBootstrapService>();
             builder.Services.AddScoped<IMenuNavegacionService, MenuNavegacionService>();
             builder.Services.AddScoped<IRequestMetricasService, RequestMetricasService>();
             builder.Services.AddScoped<ISecurityEventService, SecurityEventService>();

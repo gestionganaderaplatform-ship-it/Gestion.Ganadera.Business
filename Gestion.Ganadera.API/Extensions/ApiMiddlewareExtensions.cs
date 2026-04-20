@@ -70,6 +70,7 @@ namespace Gestion.Ganadera.API.Extensions
             app.UseMiddleware<CorrelationIdMiddleware>();
             app.UseAuthentication();
             app.UseMiddleware<ValidacionSesionMiddleware>();
+            app.UseMiddleware<GanaderiaCatalogBootstrapMiddleware>();
             app.UseMiddleware<LogContextEnrichmentMiddleware>();
             app.UseAuthorization();
             app.UseMiddleware<SecurityHeadersMiddleware>();
