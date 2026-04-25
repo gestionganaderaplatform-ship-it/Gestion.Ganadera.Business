@@ -7,11 +7,11 @@ Este documento fija la linea de trabajo que siempre debe seguirse mientras se co
 Antes de tocar backend, frontend, onboarding, menu, procesos, modelos o validaciones, se debe leer y tomar como base la documentacion vigente del producto. Si el cambio modifica comportamiento, la documentacion afectada se actualiza en el mismo bloque de trabajo.
 
 ## Lectura obligatoria siempre
-1. `Gestion.Ganadera/docs/procesos_de_negocio/documento_funcional_producto_ganadero.md`
-2. `Gestion.Ganadera/docs/procesos_de_negocio/base_documental_ganaderia/01_base_funcional_consolidada.md`
-3. `Gestion.Ganadera/docs/procesos_de_negocio/base_documental_ganaderia/02_base_tecnica_consolidada.md`
-4. `Gestion.Ganadera/docs/procesos_de_negocio/base_documental_ganaderia/03_modelo_de_experiencia_registrar.md`
-5. `Gestion.Ganadera/docs/procesos_de_negocio/backlog_operacion_ganadera.md`
+1. `Gestion.Ganadera.Business/docs/procesos_de_negocio/documento_funcional_producto_ganadero.md`
+2. `Gestion.Ganadera.Business/docs/procesos_de_negocio/base_documental_ganaderia/01_base_funcional_consolidada.md`
+3. `Gestion.Ganadera.Business/docs/procesos_de_negocio/base_documental_ganaderia/02_base_tecnica_consolidada.md`
+4. `Gestion.Ganadera.Business/docs/procesos_de_negocio/base_documental_ganaderia/03_modelo_de_experiencia_registrar.md`
+5. `Gestion.Ganadera.Business/docs/procesos_de_negocio/backlog_operacion_ganadera.md`
 
 ## Lectura adicional por proyecto
 Cuando el cambio cruce otros proyectos, tambien se debe leer lo siguiente:

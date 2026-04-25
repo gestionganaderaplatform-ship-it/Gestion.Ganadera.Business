@@ -224,10 +224,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\rename-template.ps1 -NewName 
 
 ## Archivos base agregados para estabilizar el template
 
-- [.editorconfig](/C:/Users/fabio/source/repos/fabiobaa/Gestion.Ganadera/.editorconfig): estilo y formato consistentes
-- [Directory.Build.props](/C:/Users/fabio/source/repos/fabiobaa/Gestion.Ganadera/Directory.Build.props): configuracion comun de proyectos
-- [setup-secrets.ps1](/C:/Users/fabio/source/repos/fabiobaa/Gestion.Ganadera/scripts/setup-secrets.ps1): configuracion de secretos locales
-- [smoke-api.ps1](/C:/Users/fabio/source/repos/fabiobaa/Gestion.Ganadera/scripts/smoke-api.ps1): verificacion minima de la API
+- [.editorconfig](/C:/Users/fabio/source/repos/fabiobaa/Ganaderia/Gestion.Ganadera.Business/.editorconfig): estilo y formato consistentes
+- [Directory.Build.props](/C:/Users/fabio/source/repos/fabiobaa/Ganaderia/Gestion.Ganadera.Business/Directory.Build.props): configuracion comun de proyectos
+- [setup-secrets.ps1](/C:/Users/fabio/source/repos/fabiobaa/Ganaderia/Gestion.Ganadera.Business/scripts/setup-secrets.ps1): configuracion de secretos locales
+- [smoke-api.ps1](/C:/Users/fabio/source/repos/fabiobaa/Ganaderia/Gestion.Ganadera.Business/scripts/smoke-api.ps1): verificacion minima de la API
 
 ## Como evolucionar el template sin sobre ingenieria
 

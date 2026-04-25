@@ -5,7 +5,7 @@ aplicar cambios manuales al azar.
 
 ## Guias disponibles
 
-1. [Despliegue de bases de datos](C:\Users\fabio\source\repos\fabiobaa\Ganaderia\Gestion.Ganadera\docs\operacion\01-despliegue-bases-de-datos.md)
+1. [Despliegue de bases de datos](C:\Users\fabio\source\repos\fabiobaa\Ganaderia\Gestion.Ganadera.Business\docs\operacion\01-despliegue-bases-de-datos.md)
 
 ## Regla base
 
