@@ -29,10 +29,10 @@ No significa crear muchas capas por moda. Significa poder responder con claridad
 ## Como se ve en este template
 
 ```text
-Gestion.Ganadera.API
-Gestion.Ganadera.Application
-Gestion.Ganadera.Domain
-Gestion.Ganadera.Infrastructure
+Gestion.Ganadera.Business.API
+Gestion.Ganadera.Business.Application
+Gestion.Ganadera.Business.Domain
+Gestion.Ganadera.Business.Infrastructure
 ```
 
 ## Rol de cada proyecto
@@ -54,10 +54,10 @@ No deberia contener:
 
 En este proyecto:
 
-- `Gestion.Ganadera.API/Program.cs`
-- `Gestion.Ganadera.API/Extensions`
-- `Gestion.Ganadera.API/Controllers`
-- `Gestion.Ganadera.API/Middleware`
+- `Gestion.Ganadera.Business.API/Program.cs`
+- `Gestion.Ganadera.Business.API/Extensions`
+- `Gestion.Ganadera.Business.API/Controllers`
+- `Gestion.Ganadera.Business.API/Middleware`
 
 ### Application
 
@@ -78,11 +78,11 @@ No deberia contener:
 
 En este proyecto:
 
-- `Gestion.Ganadera.Application/Features/.../Interfaces`
-- `Gestion.Ganadera.Application/Features/.../ViewModels`
-- `Gestion.Ganadera.Application/Features/.../Validators`
-- `Gestion.Ganadera.Application/Abstractions`
-- `Gestion.Ganadera.Application/Common`
+- `Gestion.Ganadera.Business.Application/Features/.../Interfaces`
+- `Gestion.Ganadera.Business.Application/Features/.../ViewModels`
+- `Gestion.Ganadera.Business.Application/Features/.../Validators`
+- `Gestion.Ganadera.Business.Application/Abstractions`
+- `Gestion.Ganadera.Business.Application/Common`
 
 ### Domain
 
@@ -100,8 +100,8 @@ No deberia contener:
 
 En este proyecto:
 
-- `Gestion.Ganadera.Domain/Base`
-- `Gestion.Ganadera.Domain/Features/Seguridad/Auditoria.cs`
+- `Gestion.Ganadera.Business.Domain/Base`
+- `Gestion.Ganadera.Business.Domain/Features/Seguridad/Auditoria.cs`
 
 ### Infrastructure
 
@@ -115,10 +115,10 @@ Responsabilidad:
 
 En este proyecto:
 
-- `Gestion.Ganadera.Infrastructure/Persistence`
-- `Gestion.Ganadera.Infrastructure/Security`
-- `Gestion.Ganadera.Infrastructure/Observability`
-- `Gestion.Ganadera.Infrastructure/Services`
+- `Gestion.Ganadera.Business.Infrastructure/Persistence`
+- `Gestion.Ganadera.Business.Infrastructure/Security`
+- `Gestion.Ganadera.Business.Infrastructure/Observability`
+- `Gestion.Ganadera.Business.Infrastructure/Services`
 
 Dentro de `Persistence` tambien viven piezas de soporte tecnico como:
 

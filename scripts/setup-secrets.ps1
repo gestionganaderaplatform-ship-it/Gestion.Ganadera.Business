@@ -12,7 +12,7 @@
 
 $ErrorActionPreference = "Stop"
 
-$projectPath = Join-Path $PSScriptRoot ".." "Gestion.Ganadera.API"
+$projectPath = Join-Path $PSScriptRoot ".." "Gestion.Ganadera.Business.API"
 
 if (-not (Test-Path $projectPath)) {
     Write-Host ""
@@ -145,11 +145,11 @@ Write-Host "==================================================" -ForegroundColor
 Write-Host ""
 Write-Host "1. Ejecuta las migraciones de base de datos:" -ForegroundColor White
 Write-Host "   dotnet ef database update ^" -ForegroundColor Gray
-Write-Host "     --project .\Gestion.Ganadera.Infrastructure ^" -ForegroundColor Gray
-Write-Host "     --startup-project .\Gestion.Ganadera.API" -ForegroundColor Gray
+Write-Host "     --project .\Gestion.Ganadera.Business.Infrastructure ^" -ForegroundColor Gray
+Write-Host "     --startup-project .\Gestion.Ganadera.Business.API" -ForegroundColor Gray
 Write-Host ""
 Write-Host "2. Ejecuta la API:" -ForegroundColor White
-Write-Host "   dotnet run --project .\Gestion.Ganadera.API" -ForegroundColor Gray
+Write-Host "   dotnet run --project .\Gestion.Ganadera.Business.API" -ForegroundColor Gray
 Write-Host ""
 Write-Host "3. Abre http://localhost:5000/swagger para ver la API" -ForegroundColor White
 Write-Host ""

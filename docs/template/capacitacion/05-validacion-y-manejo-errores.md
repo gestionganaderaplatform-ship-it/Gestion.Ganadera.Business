@@ -26,9 +26,9 @@ Es un formato estandar para respuestas de error HTTP.
 
 En este template se usa en:
 
-- `Gestion.Ganadera.API/ErrorHandling/ApiProblemDetailsFactory.cs`
-- `Gestion.Ganadera.API/Extensions/ProblemDetailsExtensions.cs`
-- `Gestion.Ganadera.API/Middleware/ErrorHandlerMiddleware.cs`
+- `Gestion.Ganadera.Business.API/ErrorHandling/ApiProblemDetailsFactory.cs`
+- `Gestion.Ganadera.Business.API/Extensions/ProblemDetailsExtensions.cs`
+- `Gestion.Ganadera.Business.API/Middleware/ErrorHandlerMiddleware.cs`
 
 ## Dos tipos de error
 

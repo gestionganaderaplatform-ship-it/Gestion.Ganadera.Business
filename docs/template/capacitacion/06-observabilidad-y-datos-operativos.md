@@ -13,7 +13,7 @@
 
 La configuracion principal de logs esta en:
 
-- `Gestion.Ganadera.API/Extensions/LoggingExtensions.cs`
+- `Gestion.Ganadera.Business.API/Extensions/LoggingExtensions.cs`
 
 Usa `Serilog` y escribe en consola y base de datos.
 
@@ -21,7 +21,7 @@ Usa `Serilog` y escribe en consola y base de datos.
 
 El middleware vive en:
 
-- `Gestion.Ganadera.API/Middleware/MetricasMiddleware.cs`
+- `Gestion.Ganadera.Business.API/Middleware/MetricasMiddleware.cs`
 
 La persistencia de esas metricas se delega a un contrato de `Application`.
 Con eso, la capa HTTP no necesita conocer `DbContext` ni modelos tecnicos de infraestructura.
@@ -44,7 +44,7 @@ La auditoria no es lo mismo que logging.
 
 Se genera con:
 
-- `Gestion.Ganadera.Infrastructure/Persistence/Interceptors/AuditSaveChangesInterceptor.cs`
+- `Gestion.Ganadera.Business.Infrastructure/Persistence/Interceptors/AuditSaveChangesInterceptor.cs`
 
 La auditoria intenta resolver el actor actual desde el contexto autenticado del request.
 

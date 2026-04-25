@@ -15,7 +15,7 @@ Este directorio contiene los scripts SQL idempotentes que se aplican antes de pu
 
 ## Paso a paso recomendado
 
-1. Generar una nueva migracion en el proyecto `Gestion.Ganadera.Infrastructure`.
+1. Generar una nueva migracion en el proyecto `Gestion.Ganadera.Business.Infrastructure`.
 2. Revisar el cambio de modelo y el codigo de la migracion.
 3. Generar el script idempotente en `Database/Despliegue/Test/` o `Database/Despliegue/Produccion/`.
 4. Validar que el script solo contenga cambios esperados.
@@ -35,12 +35,12 @@ Si tu entorno usa autenticacion SQL en lugar de integrada, reemplaza `-E` por `-
 
 ## Comando para regenerar
 
-Desde `Gestion.Ganadera.API`:
+Desde `Gestion.Ganadera.Business.API`:
 
 ```powershell
 & "C:\Users\fabio\.dotnet\tools\dotnet-ef.exe" migrations script --idempotent --no-build `
-  --project "..\Gestion.Ganadera.Infrastructure\Gestion.Ganadera.Infrastructure.csproj" `
-  --startup-project ".\Gestion.Ganadera.API.csproj" `
+  --project "..\Gestion.Ganadera.Business.Infrastructure\Gestion.Ganadera.Business.Infrastructure.csproj" `
+  --startup-project ".\Gestion.Ganadera.Business.API.csproj" `
   -o "..\Database\Despliegue\Test\20260413_api_test_idempotent.sql"
 ```
 

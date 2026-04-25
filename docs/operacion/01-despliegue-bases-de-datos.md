@@ -1,6 +1,6 @@
 # Despliegue de bases de datos
 
-Esta guia define el proceso recomendado para `Test` y `Produccion` en `Gestion.Ganadera.API`.
+Esta guia define el proceso recomendado para `Test` y `Produccion` en `Gestion.Ganadera.Business.API`.
 
 ## Regla base
 

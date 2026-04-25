@@ -1,4 +1,4 @@
-# Gestion.Ganadera.API
+# Gestion.Ganadera.Business.API
 
 API base en `.NET 9` pensada para arrancar proyectos backend con una estructura clara, segura y lista para crecer sin mezclar responsabilidades desde el dia uno.
 
@@ -46,10 +46,10 @@ Desde el inicio deja resuelto lo que normalmente consume tiempo en casi cualquie
 ## Estructura de la solucion
 
 ```text
-Gestion.Ganadera.API
-Gestion.Ganadera.Application
-Gestion.Ganadera.Domain
-Gestion.Ganadera.Infrastructure
+Gestion.Ganadera.Business.API
+Gestion.Ganadera.Business.Application
+Gestion.Ganadera.Business.Domain
+Gestion.Ganadera.Business.Infrastructure
 ```
 
 ## Arquitectura general
@@ -84,7 +84,7 @@ Reglas clave:
 
 ## Rol de cada proyecto
 
-### `Gestion.Ganadera.API`
+### `Gestion.Ganadera.Business.API`
 
 Responsabilidades:
 
@@ -98,7 +98,7 @@ Responsabilidades:
 
 Los controllers deben ser delgados. Su trabajo es traducir HTTP, no resolver logica del negocio.
 
-### `Gestion.Ganadera.Application`
+### `Gestion.Ganadera.Business.Application`
 
 Responsabilidades:
 
@@ -111,7 +111,7 @@ Responsabilidades:
 
 Esta capa no debe depender de ASP.NET ni de detalles tecnicos.
 
-### `Gestion.Ganadera.Domain`
+### `Gestion.Ganadera.Business.Domain`
 
 Responsabilidades:
 
@@ -121,7 +121,7 @@ Responsabilidades:
 
 En este template, `Auditoria` ya vive en `Domain` porque representa un concepto funcional del sistema: el historial de cambios de entidades de negocio.
 
-### `Gestion.Ganadera.Infrastructure`
+### `Gestion.Ganadera.Business.Infrastructure`
 
 Responsabilidades:
 
@@ -153,9 +153,9 @@ Las piezas transversales viven en la capa que realmente las usa:
 
 La composicion principal del sistema se hace en:
 
-- [Program.cs](../../Gestion.Ganadera.API/Program.cs)
-- [DependencyInjectionExtensions.cs](../../Gestion.Ganadera.API/Extensions/DependencyInjectionExtensions.cs)
-- [ApiServiceExtensions.cs](../../Gestion.Ganadera.API/Extensions/ApiServiceExtensions.cs)
+- [Program.cs](../../Gestion.Ganadera.Business.API/Program.cs)
+- [DependencyInjectionExtensions.cs](../../Gestion.Ganadera.Business.API/Extensions/DependencyInjectionExtensions.cs)
+- [ApiServiceExtensions.cs](../../Gestion.Ganadera.Business.API/Extensions/ApiServiceExtensions.cs)
 
 Aqui se registran:
 
@@ -467,8 +467,8 @@ En `Application` la familia extendida de `IBaseService` ya soporta Excel:
 
 En `Infrastructure` y `API` existen variantes reutilizables:
 
-- [BaseService.cs](../../Gestion.Ganadera.Infrastructure/Services/Base/BaseService.cs)
-- [BaseController.cs](../../Gestion.Ganadera.API/Controllers/Base/BaseController.cs)
+- [BaseService.cs](../../Gestion.Ganadera.Business.Infrastructure/Services/Base/BaseService.cs)
+- [BaseController.cs](../../Gestion.Ganadera.Business.API/Controllers/Base/BaseController.cs)
 
 Esta base ya resuelve:
 

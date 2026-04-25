@@ -25,10 +25,10 @@ Si es tu primera vez en este repositorio, sigue este orden:
 ## Estructura de la solucion
 
 ```text
-Gestion.Ganadera.API
-Gestion.Ganadera.Application
-Gestion.Ganadera.Domain
-Gestion.Ganadera.Infrastructure
+Gestion.Ganadera.Business.API
+Gestion.Ganadera.Business.Application
+Gestion.Ganadera.Business.Domain
+Gestion.Ganadera.Business.Infrastructure
 ```
 
 ## Convenciones de carpetas
@@ -68,7 +68,7 @@ El script te pedira:
 
 #### Paso 2: Si prefieres hacerlo manualmente
 
-Abre una terminal en la carpeta `Gestion.Ganadera.API` y ejecuta:
+Abre una terminal en la carpeta `Gestion.Ganadera.Business.API` y ejecuta:
 
 ```powershell
 # 1. Inicializar secretos (solo una vez)
@@ -126,19 +126,19 @@ setx AutoMapper__LicenseKey "tu-licencia-real"
 ### 4. Restaurar paquetes
 
 ```powershell
-dotnet restore .\Gestion.Ganadera.API\Gestion.Ganadera.API.sln
+dotnet restore .\Gestion.Ganadera.Business.API\Gestion.Ganadera.Business.API.sln
 ```
 
 ### 5. Aplicar migraciones
 
 ```powershell
-dotnet ef database update --project .\Gestion.Ganadera.Infrastructure\Gestion.Ganadera.Infrastructure.csproj --startup-project .\Gestion.Ganadera.API\Gestion.Ganadera.API.csproj --context AppDbContext
+dotnet ef database update --project .\Gestion.Ganadera.Business.Infrastructure\Gestion.Ganadera.Business.Infrastructure.csproj --startup-project .\Gestion.Ganadera.Business.API\Gestion.Ganadera.Business.API.csproj --context AppDbContext
 ```
 
 ### 6. Ejecutar la API
 
 ```powershell
-dotnet run --project .\Gestion.Ganadera.API\Gestion.Ganadera.API.csproj
+dotnet run --project .\Gestion.Ganadera.Business.API\Gestion.Ganadera.Business.API.csproj
 ```
 
 ### 7. Verificar que respondio

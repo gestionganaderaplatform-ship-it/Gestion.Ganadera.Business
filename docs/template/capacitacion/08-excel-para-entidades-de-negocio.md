@@ -12,18 +12,18 @@ Muchas APIs terminan necesitando:
 
 Contratos:
 
-- `Gestion.Ganadera.Application/Features/Base/Interfaces/IBaseService.cs`
+- `Gestion.Ganadera.Business.Application/Features/Base/Interfaces/IBaseService.cs`
 
 Configuracion:
 
-- `Gestion.Ganadera.Application/Abstractions/Interfaces/IExcelImportSettingsProvider.cs`
-- `Gestion.Ganadera.API/Options/ExcelImportOptions.cs`
-- `Gestion.Ganadera.API/Configuration/Providers/ExcelImportSettingsProvider.cs`
+- `Gestion.Ganadera.Business.Application/Abstractions/Interfaces/IExcelImportSettingsProvider.cs`
+- `Gestion.Ganadera.Business.API/Options/ExcelImportOptions.cs`
+- `Gestion.Ganadera.Business.API/Configuration/Providers/ExcelImportSettingsProvider.cs`
 
 Implementacion base:
 
-- `Gestion.Ganadera.Infrastructure/Services/Base/BaseService.cs`
-- `Gestion.Ganadera.API/Controllers/Base/BaseController.cs`
+- `Gestion.Ganadera.Business.Infrastructure/Services/Base/BaseService.cs`
+- `Gestion.Ganadera.Business.API/Controllers/Base/BaseController.cs`
 
 ## Que resuelve esta base
 

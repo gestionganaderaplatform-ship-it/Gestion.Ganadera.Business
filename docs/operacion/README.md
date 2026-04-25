@@ -1,6 +1,6 @@
 # Guias de operacion de la API de negocio
 
-Estas guias ayudan a desplegar y mantener `Gestion.Ganadera.API` sin depender de memoria ni de
+Estas guias ayudan a desplegar y mantener `Gestion.Ganadera.Business.API` sin depender de memoria ni de
 aplicar cambios manuales al azar.
 
 ## Guias disponibles

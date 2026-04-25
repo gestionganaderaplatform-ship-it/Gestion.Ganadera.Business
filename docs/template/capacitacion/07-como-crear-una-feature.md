@@ -90,9 +90,9 @@ En ese punto, usa el template como base arquitectonica, no como restriccion.
 
 ## Patrones base utiles
 
-- `Gestion.Ganadera.API/Controllers/Base/BaseController.cs`
-- `Gestion.Ganadera.Infrastructure/Services/Base/BaseService.cs`
-- `Gestion.Ganadera.Infrastructure/Persistence/Repositories/Base/BaseRepository.cs`
+- `Gestion.Ganadera.Business.API/Controllers/Base/BaseController.cs`
+- `Gestion.Ganadera.Business.Infrastructure/Services/Base/BaseService.cs`
+- `Gestion.Ganadera.Business.Infrastructure/Persistence/Repositories/Base/BaseRepository.cs`
 
 ## Capacidades opcionales
 

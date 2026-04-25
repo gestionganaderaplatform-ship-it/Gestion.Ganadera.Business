@@ -19,8 +19,8 @@ Por eso el orden importa.
 
 Puedes verlo en:
 
-- `Gestion.Ganadera.API/Program.cs`
-- `Gestion.Ganadera.API/Extensions/ApiMiddlewareExtensions.cs`
+- `Gestion.Ganadera.Business.API/Program.cs`
+- `Gestion.Ganadera.Business.API/Extensions/ApiMiddlewareExtensions.cs`
 
 Orden general:
 
@@ -59,8 +59,8 @@ En este template la validacion se distribuye asi:
 
 ## Archivos utiles
 
-- `Gestion.Ganadera.API/Program.cs`
-- `Gestion.Ganadera.API/Extensions/ApiMiddlewareExtensions.cs`
-- `Gestion.Ganadera.API/Middleware/CorrelationIdMiddleware.cs`
-- `Gestion.Ganadera.API/Middleware/ErrorHandlerMiddleware.cs`
-- `Gestion.Ganadera.API/Middleware/MetricasMiddleware.cs`
+- `Gestion.Ganadera.Business.API/Program.cs`
+- `Gestion.Ganadera.Business.API/Extensions/ApiMiddlewareExtensions.cs`
+- `Gestion.Ganadera.Business.API/Middleware/CorrelationIdMiddleware.cs`
+- `Gestion.Ganadera.Business.API/Middleware/ErrorHandlerMiddleware.cs`
+- `Gestion.Ganadera.Business.API/Middleware/MetricasMiddleware.cs`

@@ -1,6 +1,6 @@
 /*
 ======================================================
- Script: Reset suave de datos - Gestion.Ganadera.API
+  Script: Reset suave de datos - Gestion.Ganadera.Business.API
 ------------------------------------------------------
  Objetivo:
    Limpiar solo los datos transaccionales y de trazabilidad

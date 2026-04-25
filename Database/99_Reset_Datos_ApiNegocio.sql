@@ -1,6 +1,6 @@
 /*
 ======================================================
- Script: Reset de datos - Gestion.Ganadera.API
+  Script: Reset de datos - Gestion.Ganadera.Business.API
 ------------------------------------------------------
  Objetivo:
    Limpiar datos operativos, funcionales y catalogos

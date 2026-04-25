@@ -18,7 +18,7 @@ Responde:
 
 La configuracion principal esta en:
 
-- `Gestion.Ganadera.API/Extensions/AuthenticationExtensions.cs`
+- `Gestion.Ganadera.Business.API/Extensions/AuthenticationExtensions.cs`
 
 Ese archivo:
 
@@ -79,12 +79,12 @@ Bearer TU_TOKEN
 
 Piezas importantes:
 
-- `Gestion.Ganadera.API/Security/Permissions/ControllerPermission.cs`
-- `Gestion.Ganadera.API/Security/Permissions/ControllerPermissionsAttribute.cs`
-- `Gestion.Ganadera.API/Security/Permissions/RequirePermissionAttribute.cs`
-- `Gestion.Ganadera.API/Security/Permissions/PermissionPolicy.cs`
-- `Gestion.Ganadera.API/Security/Permissions/PermissionAuthorizationRequirement.cs`
-- `Gestion.Ganadera.API/Conventions/PermissionApplicationModelConvention.cs`
+- `Gestion.Ganadera.Business.API/Security/Permissions/ControllerPermission.cs`
+- `Gestion.Ganadera.Business.API/Security/Permissions/ControllerPermissionsAttribute.cs`
+- `Gestion.Ganadera.Business.API/Security/Permissions/RequirePermissionAttribute.cs`
+- `Gestion.Ganadera.Business.API/Security/Permissions/PermissionPolicy.cs`
+- `Gestion.Ganadera.Business.API/Security/Permissions/PermissionAuthorizationRequirement.cs`
+- `Gestion.Ganadera.Business.API/Conventions/PermissionApplicationModelConvention.cs`
 
 `ControllerPermission` usa `[Flags]`. Por eso sus valores son potencias de dos.
 

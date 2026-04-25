@@ -19,7 +19,7 @@ Sirve para contestar una pregunta muy practica:
 
 La implementacion esta en:
 
-- `Gestion.Ganadera.API/Middleware/CorrelationIdMiddleware.cs`
+- `Gestion.Ganadera.Business.API/Middleware/CorrelationIdMiddleware.cs`
 
 Ese middleware:
 
@@ -31,11 +31,11 @@ Ese middleware:
 
 ## Donde se reutiliza en este proyecto
 
-- `Gestion.Ganadera.API/Extensions/ProblemDetailsExtensions.cs`
-- `Gestion.Ganadera.API/ErrorHandling/ApiProblemDetailsFactory.cs`
-- `Gestion.Ganadera.API/Middleware/MetricasMiddleware.cs`
-- `Gestion.Ganadera.API/Extensions/AuthenticationExtensions.cs`
-- `Gestion.Ganadera.API/Extensions/RateLimitingExtensions.cs`
+- `Gestion.Ganadera.Business.API/Extensions/ProblemDetailsExtensions.cs`
+- `Gestion.Ganadera.Business.API/ErrorHandling/ApiProblemDetailsFactory.cs`
+- `Gestion.Ganadera.Business.API/Middleware/MetricasMiddleware.cs`
+- `Gestion.Ganadera.Business.API/Extensions/AuthenticationExtensions.cs`
+- `Gestion.Ganadera.Business.API/Extensions/RateLimitingExtensions.cs`
 
 ## Error comun
 

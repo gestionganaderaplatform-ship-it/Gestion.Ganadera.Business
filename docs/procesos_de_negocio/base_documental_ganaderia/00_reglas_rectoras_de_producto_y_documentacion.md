@@ -17,11 +17,11 @@ Antes de tocar backend, frontend, onboarding, menu, procesos, modelos o validaci
 Cuando el cambio cruce otros proyectos, tambien se debe leer lo siguiente:
 
 ### Auth
-1. `Gestion.Ganadera.Auth/PLATAFORMA.md`
-2. `Gestion.Ganadera.Auth/docs/procesos/backlog_operacion_ganadera.md`
+1. `Gestion.Ganadera.Business.Auth/PLATAFORMA.md`
+2. `Gestion.Ganadera.Business.Auth/docs/procesos/backlog_operacion_ganadera.md`
 
 ### Web
-1. `Gestion.Ganadera.Web/docs/procesos/backlog_operacion_ganadera.md`
+1. `Gestion.Ganadera.Business.Web/docs/procesos/backlog_operacion_ganadera.md`
 
 ## Reglas de producto que no deben olvidarse
 1. El sistema esta gobernado por procesos y eventos, no por mantenimiento libre de entidades.

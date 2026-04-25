@@ -25,8 +25,8 @@ Esta carpeta separa la documentacion comun del repositorio, la documentacion fun
 
 ## Referencia cruzada de plataforma
 
-- La documentacion transversal temporal de plataforma vive en `Gestion.Ganadera.Auth/PLATAFORMA.md`.
-- Los pendientes de contraste global y el documento fuente para contrastar con codigo viven temporalmente en `Gestion.Ganadera.Auth/docs/plataforma/`.
+- La documentacion transversal temporal de plataforma vive en `Gestion.Ganadera.Business.Auth/PLATAFORMA.md`.
+- Los pendientes de contraste global y el documento fuente para contrastar con codigo viven temporalmente en `Gestion.Ganadera.Business.Auth/docs/plataforma/`.
 
 ## Nota para proyectos reales
 
