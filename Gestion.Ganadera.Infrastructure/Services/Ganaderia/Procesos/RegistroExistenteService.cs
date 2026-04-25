@@ -30,6 +30,11 @@ public class RegistroExistenteService(
         return repository.ExisteIdentificadorAsync(fincaCodigo, identificador.Trim(), cancellationToken);
     }
 
+    public Task<int> ObtenerSiguienteConsecutivoAsync(long fincaCodigo, CancellationToken cancellationToken = default)
+    {
+        return repository.ObtenerSiguienteConsecutivoAsync(fincaCodigo, cancellationToken);
+    }
+
     private (Animal, IdentificadorAnimal, EventoGanadero, EventoGanaderoAnimal, EventoDetalleRegistroExistente) PrepararEntidades(RegistrarExistenteRequest request)
     {
         var usuarioLogueado = currentActorProvider.ActorEmail ?? currentActorProvider.ActorId ?? "SISTEMA";

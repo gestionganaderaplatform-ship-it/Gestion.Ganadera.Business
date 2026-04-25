@@ -15,7 +15,7 @@ namespace Gestion.Ganadera.API.Controllers.Ganaderia.Procesos;
 [Authorize(Policy = PoliticaPlan.CuentaPadreProductivoMinimo)]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/ganaderia/procesos/compra")]
-[ControllerPermissions(ControllerPermission.Create | ControllerPermission.GetById)]
+[ControllerPermissions(ControllerPermission.Create)]
 public class CompraController(ICompraService service) : ControllerBase
 {
     [HttpPost("validar")]

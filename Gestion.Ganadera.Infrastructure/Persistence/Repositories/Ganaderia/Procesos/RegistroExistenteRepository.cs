@@ -148,6 +148,15 @@ public class RegistroExistenteRepository(AppDbContext context) : IRegistroExiste
                 cancellationToken);
     }
 
+    public async Task<int> ObtenerSiguienteConsecutivoAsync(long fincaCodigo, CancellationToken cancellationToken = default)
+    {
+        var totalAnimales = await context.Animales
+            .AsNoTracking()
+            .CountAsync(item => item.Finca_Codigo == fincaCodigo, cancellationToken);
+
+        return totalAnimales + 1;
+    }
+
     private async Task<long> ObtenerTipoIdentificadorInternoCodigoAsync(
         long fincaCodigo,
         CancellationToken cancellationToken)

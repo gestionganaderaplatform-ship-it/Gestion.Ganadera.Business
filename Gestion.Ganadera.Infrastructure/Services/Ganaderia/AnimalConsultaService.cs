@@ -5,6 +5,13 @@ namespace Gestion.Ganadera.Infrastructure.Services.Ganaderia;
 
 public class AnimalConsultaService(IAnimalConsultaRepository repository) : IAnimalConsultaService
 {
+    public Task<InicioDashboardViewModel> ObtenerResumenInicioAsync(
+        long? fincaCodigo = null,
+        CancellationToken cancellationToken = default)
+    {
+        return repository.ObtenerResumenInicioAsync(fincaCodigo, cancellationToken);
+    }
+
     public Task<(IEnumerable<GanadoViewModel> Items, int TotalRegistros)> ObtenerPorPaginado(
         int pagina,
         int tamanoPagina,

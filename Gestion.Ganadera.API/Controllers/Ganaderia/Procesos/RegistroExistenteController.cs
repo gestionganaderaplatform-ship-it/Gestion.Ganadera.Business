@@ -12,10 +12,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace Gestion.Ganadera.API.Controllers.Ganaderia.Procesos;
 
 [ApiController]
-[Authorize(Policy = PoliticaPlan.CuentaPadreProductivoMinimo)]
+[Authorize(Policy = PoliticaPlan.CuentaPadreEsencialMinimo)]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/ganaderia/procesos/registro-existente")]
-[ControllerPermissions(ControllerPermission.Create)]
+[ControllerPermissions(ControllerPermission.Create | ControllerPermission.GetPaged)]
 public class RegistroExistenteController(IRegistroExistenteService service) : ControllerBase
 {
     [HttpPost("validar")]
@@ -99,5 +99,15 @@ public class RegistroExistenteController(IRegistroExistenteService service) : Co
     {
         var existe = await service.ExisteIdentificadorAsync(fincaCodigo, identificador, cancellationToken);
         return Ok(new { Existe = existe });
+    }
+
+    [HttpGet("siguiente-consecutivo")]
+    [RequirePermission(ControllerPermission.GetPaged)]
+    public async Task<IActionResult> ObtenerSiguienteConsecutivo(
+        [FromQuery] long fincaCodigo,
+        CancellationToken cancellationToken = default)
+    {
+        var siguienteConsecutivo = await service.ObtenerSiguienteConsecutivoAsync(fincaCodigo, cancellationToken);
+        return Ok(new { Siguiente_Consecutivo = siguienteConsecutivo });
     }
 }

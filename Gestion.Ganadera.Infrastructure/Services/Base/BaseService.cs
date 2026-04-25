@@ -19,13 +19,13 @@ namespace Gestion.Ganadera.Infrastructure.Services.Base
         protected readonly TRepository _repository = repository;
         protected readonly IMapper _mapper = mapper;
 
-        public async Task<TView?> Consultar(long codigo)
+        public virtual async Task<TView?> Consultar(long codigo)
         {
             var entity = await _repository.Consultar(codigo);
             return _mapper.Map<TView>(entity);
         }
 
-        public async Task<IEnumerable<TView>> ObtenerTodos()
+        public virtual async Task<IEnumerable<TView>> ObtenerTodos()
         {
             var entities = await _repository.ObtenerTodos();
             return _mapper.Map<IEnumerable<TView>>(entities);

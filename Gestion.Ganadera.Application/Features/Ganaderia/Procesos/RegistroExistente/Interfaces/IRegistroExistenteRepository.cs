@@ -17,4 +17,5 @@ public interface IRegistroExistenteRepository : IValidarRegistroExistenteReposit
         CancellationToken cancellationToken = default);
 
     Task<bool> ExisteIdentificadorAsync(long fincaCodigo, string identificador, CancellationToken cancellationToken = default);
+    Task<int> ObtenerSiguienteConsecutivoAsync(long fincaCodigo, CancellationToken cancellationToken = default);
 }

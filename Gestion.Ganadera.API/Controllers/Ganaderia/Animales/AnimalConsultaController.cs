@@ -14,12 +14,22 @@ using Microsoft.AspNetCore.Mvc;
 namespace Gestion.Ganadera.API.Controllers.Ganaderia.Animales;
 
 [ApiController]
-[Authorize(Policy = PoliticaPlan.CuentaPadreProductivoMinimo)]
+[Authorize(Policy = PoliticaPlan.CuentaPadreEsencialMinimo)]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/ganaderia/animales-consulta")]
 [ControllerPermissions(ControllerPermission.GetPaged | ControllerPermission.GetById)]
 public class AnimalConsultaController(IAnimalConsultaService service) : ControllerBase
 {
+    [HttpGet("resumen-inicio")]
+    [RequirePermission(ControllerPermission.GetPaged)]
+    public async Task<IActionResult> ObtenerResumenInicio(
+        [FromQuery] long? fincaCodigo = null,
+        CancellationToken cancellationToken = default)
+    {
+        var resumen = await service.ObtenerResumenInicioAsync(fincaCodigo, cancellationToken);
+        return Ok(resumen);
+    }
+
     [HttpGet("paginado")]
     [RequirePermission(ControllerPermission.GetPaged)]
     public async Task<IActionResult> ObtenerPorPaginado(

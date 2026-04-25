@@ -18,24 +18,16 @@ internal static class GanaderiaCatalogosBase
             },
             new TipoIdentificador
             {
-                Tipo_Identificador_Nombre = "Arete",
-                Tipo_Identificador_Codigo_Interno = "ARETE",
+                Tipo_Identificador_Nombre = "Generacion automatica",
+                Tipo_Identificador_Codigo_Interno = "GENERACION_AUTOMATICA",
                 Tipo_Identificador_Operativo = true,
                 Tipo_Identificador_Permite_Busqueda = true,
                 Tipo_Identificador_Permite_Principal = true
             },
             new TipoIdentificador
             {
-                Tipo_Identificador_Nombre = "Hierro",
-                Tipo_Identificador_Codigo_Interno = "HIERRO",
-                Tipo_Identificador_Operativo = true,
-                Tipo_Identificador_Permite_Busqueda = true,
-                Tipo_Identificador_Permite_Principal = true
-            },
-            new TipoIdentificador
-            {
-                Tipo_Identificador_Nombre = "RFID",
-                Tipo_Identificador_Codigo_Interno = "RFID",
+                Tipo_Identificador_Nombre = "Identificador propio",
+                Tipo_Identificador_Codigo_Interno = "PROPIO",
                 Tipo_Identificador_Operativo = true,
                 Tipo_Identificador_Permite_Busqueda = true,
                 Tipo_Identificador_Permite_Principal = true

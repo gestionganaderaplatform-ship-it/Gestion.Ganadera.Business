@@ -34,6 +34,10 @@ no abrir el siguiente proceso hasta que el actual tenga backend utilizable y fro
 - [x] Crear identificador interno del sistema en compra
 - [x] Validar compatibilidad categoria y sexo
 - [x] Restringir un solo identificador principal activo por animal
+- [x] Quitar `Hierro` como tipo visible en registro existente
+- [x] Dejar `Generacion automatica` e `Identificador propio` como tipos operativos
+- [x] Consultar siguiente consecutivo por finca para identificacion automatica
+- [x] Tomar marca ganadera del cliente como base del identificador automatico
 
 ## Procesos Fase 1
 
@@ -43,7 +47,18 @@ no abrir el siguiente proceso hasta que el actual tenga backend utilizable y fro
 - [x] Persistencia atomica de animal, identificadores, evento y detalle
 - [x] Actualizacion de snapshot del animal
 - [x] Impacto en historial
+- [x] Documento vivo del proceso en `registro_existente_estado_actual.md`
+- [x] Ajuste de tipos visibles de identificacion para este proceso
+- [x] Salida de `Hierro` como tipo visible
+- [x] Entrada de `Generacion automatica` e `Identificador propio`
+- [x] Consulta del siguiente consecutivo por finca
+- [x] Uso de marca ganadera del cliente para la generacion automatica
+- [x] Entregar desde backend la banda de edad esperada por categoria para no calcularla en frontend
 - [ ] Validacion manual completa con payload real
+- [ ] Cerrar captura de marcas ganaderas en la experiencia de configuracion/onboarding
+- [ ] Cerrar del todo la recuperacion del onboarding cuando la finca exista pero la base operativa quede pendiente
+- [ ] Validar si el consecutivo por finca queda con conteo operativo o con secuencia dedicada
+- [ ] Definir entrada futura de RFID escaneado
 
 ### Proceso 2. Compra
 - [x] Endpoint de validacion
@@ -64,5 +79,13 @@ no abrir el siguiente proceso hasta que el actual tenga backend utilizable y fro
 ## Siguiente bloque recomendado
 
 1. Probar de punta a punta registro existente y compra con payload real
-2. Cerrar movimiento de potrero en backend
-3. Acompanhar al frontend para que el primer flujo quede operativo completo
+2. Cerrar captura y edicion de marcas ganaderas del cliente en la experiencia
+3. Validar si el consecutivo por finca requiere secuencia dedicada
+4. Cerrar movimiento de potrero en backend
+
+## Pendiente para etapa final
+
+- [ ] Evaluar modulo de analisis sugeridos para `Inicio`
+- [ ] Mantener por ahora solo indicadores y lecturas operativas sustentadas en reglas y datos reales
+- [ ] Dejar la capa de IA como fase posterior, cuando ya esten cerrados compra, venta, movimientos y capacidad de potreros
+- [ ] Si se retoma, construirla desde backend como hallazgos o sugerencias y no como calculo de negocio en frontend

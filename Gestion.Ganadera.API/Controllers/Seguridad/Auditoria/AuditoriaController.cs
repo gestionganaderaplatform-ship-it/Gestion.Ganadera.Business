@@ -19,10 +19,8 @@ namespace Gestion.Ganadera.API.Controllers.Seguridad.Auditoria
     [Route("api/v{version:apiVersion}/seguridad/auditoria")]
     [ControllerPermissions(
        ControllerPermission.GetPaged
-       | ControllerPermission.GetAll
-       | ControllerPermission.GetById
        | ControllerPermission.Filter
-       | ControllerPermission.ExportExcel
+   | ControllerPermission.ExportExcel
    )]
     public class AuditoriaController(
         IAuditoriaService service,

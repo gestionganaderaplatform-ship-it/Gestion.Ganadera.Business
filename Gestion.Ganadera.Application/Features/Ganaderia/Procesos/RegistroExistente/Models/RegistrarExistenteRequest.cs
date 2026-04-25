@@ -4,14 +4,12 @@ public class RegistrarExistenteRequest : ValidarRegistroExistenteRequest
 {
     public DateTime Fecha_Informada { get; set; }
     public string? Observacion { get; set; }
-    public string? Hierro { get; set; }
 }
 
 public class IdentificadorIndividualRequest
 {
     public string Identificador_Principal { get; set; } = string.Empty;
     public long Tipo_Identificador_Codigo { get; set; }
-    public string? Hierro { get; set; }
     public DateTime? Fecha_Nacimiento { get; set; }
 }
 

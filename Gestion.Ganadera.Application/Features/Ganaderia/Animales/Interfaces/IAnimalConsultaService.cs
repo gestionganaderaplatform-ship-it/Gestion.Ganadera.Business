@@ -4,6 +4,10 @@ namespace Gestion.Ganadera.Application.Features.Ganaderia.Animales.Interfaces;
 
 public interface IAnimalConsultaService
 {
+    Task<InicioDashboardViewModel> ObtenerResumenInicioAsync(
+        long? fincaCodigo = null,
+        CancellationToken cancellationToken = default);
+
     Task<(IEnumerable<GanadoViewModel> Items, int TotalRegistros)> ObtenerPorPaginado(
         int pagina,
         int tamanoPagina,

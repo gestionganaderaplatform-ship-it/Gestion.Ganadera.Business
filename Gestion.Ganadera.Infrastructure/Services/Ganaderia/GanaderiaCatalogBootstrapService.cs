@@ -10,6 +10,8 @@ public sealed class GanaderiaCatalogBootstrapService(
     AppDbContext dbContext,
     ICurrentClientProvider currentClientProvider) : IGanaderiaCatalogBootstrapService
 {
+    private static readonly string[] LegacyTipoIdentificadorCodes = ["ARETE", "HIERRO", "RFID"];
+
     private readonly AppDbContext _dbContext = dbContext;
     private readonly ICurrentClientProvider _currentClientProvider = currentClientProvider;
 
@@ -40,17 +42,38 @@ public sealed class GanaderiaCatalogBootstrapService(
             .Where(item =>
                 item.Cliente_Codigo == clienteCodigo &&
                 item.Tipo_Identificador_Codigo_Interno != null &&
-                codigosBase.Contains(item.Tipo_Identificador_Codigo_Interno))
-            .Select(item => item.Tipo_Identificador_Codigo_Interno!)
+                (codigosBase.Contains(item.Tipo_Identificador_Codigo_Interno) ||
+                 LegacyTipoIdentificadorCodes.Contains(item.Tipo_Identificador_Codigo_Interno)))
             .ToListAsync(cancellationToken);
 
+        var existentesPorCodigo = existentes
+            .ToDictionary(item => item.Tipo_Identificador_Codigo_Interno!, StringComparer.OrdinalIgnoreCase);
+
         var faltantes = tiposBase
-            .Where(item => !existentes.Contains(item.Tipo_Identificador_Codigo_Interno!, StringComparer.OrdinalIgnoreCase))
+            .Where(item => !existentesPorCodigo.ContainsKey(item.Tipo_Identificador_Codigo_Interno!))
             .ToList();
 
-        if (faltantes.Count == 0)
+        foreach (var tipoBase in tiposBase)
         {
-            return;
+            if (!existentesPorCodigo.TryGetValue(tipoBase.Tipo_Identificador_Codigo_Interno!, out var existente))
+            {
+                continue;
+            }
+
+            existente.Tipo_Identificador_Nombre = tipoBase.Tipo_Identificador_Nombre;
+            existente.Tipo_Identificador_Operativo = tipoBase.Tipo_Identificador_Operativo;
+            existente.Tipo_Identificador_Permite_Busqueda = tipoBase.Tipo_Identificador_Permite_Busqueda;
+            existente.Tipo_Identificador_Permite_Principal = tipoBase.Tipo_Identificador_Permite_Principal;
+            existente.Tipo_Identificador_Activo = true;
+        }
+
+        foreach (var legacy in existentes.Where(item =>
+                     item.Tipo_Identificador_Codigo_Interno != null &&
+                     LegacyTipoIdentificadorCodes.Contains(item.Tipo_Identificador_Codigo_Interno, StringComparer.OrdinalIgnoreCase)))
+        {
+            legacy.Tipo_Identificador_Operativo = false;
+            legacy.Tipo_Identificador_Permite_Principal = false;
+            legacy.Tipo_Identificador_Activo = false;
         }
 
         foreach (var faltante in faltantes)
@@ -58,7 +81,11 @@ public sealed class GanaderiaCatalogBootstrapService(
             faltante.Cliente_Codigo = clienteCodigo;
         }
 
-        _dbContext.TiposIdentificador.AddRange(faltantes);
+        if (faltantes.Count > 0)
+        {
+            _dbContext.TiposIdentificador.AddRange(faltantes);
+        }
+
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 

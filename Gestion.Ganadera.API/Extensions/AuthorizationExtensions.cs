@@ -32,6 +32,16 @@ public static class AuthorizationExtensions
             }
 
             options.AddPolicy(
+                PoliticaPlan.CuentaPadreEsencialMinimo,
+                policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.AddRequirements(new RequisitoPlanMinimo(
+                        NivelPlanAcceso.Esencial,
+                        requiereCuentaPadre: true));
+                });
+
+            options.AddPolicy(
                 PoliticaPlan.CuentaPadreProductivoMinimo,
                 policy =>
                 {

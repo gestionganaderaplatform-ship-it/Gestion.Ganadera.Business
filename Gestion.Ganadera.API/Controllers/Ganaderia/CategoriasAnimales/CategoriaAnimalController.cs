@@ -11,19 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace Gestion.Ganadera.API.Controllers.Ganaderia.CategoriasAnimales;
 
 [ApiController]
-[Authorize(Policy = PoliticaPlan.CuentaPadreProductivoMinimo)]
+[Authorize(Policy = PoliticaPlan.CuentaPadreEsencialMinimo)]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/ganaderia/categorias-animales")]
 [ControllerPermissions(
-   ControllerPermission.GetPaged
-   | ControllerPermission.GetAll
-   | ControllerPermission.GetById
-   | ControllerPermission.Create
-   | ControllerPermission.Update
-   | ControllerPermission.Delete
-   | ControllerPermission.Exists
-   | ControllerPermission.ExistsMany
-   | ControllerPermission.Filter)]
+   ControllerPermission.GetAll)]
 public class CategoriaAnimalController(
     ICategoriaAnimalService service,
     ILogger<CategoriaAnimalController> logger)
