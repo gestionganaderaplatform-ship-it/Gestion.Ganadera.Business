@@ -16,6 +16,11 @@ public class AnimalConsultaService(IAnimalConsultaRepository repository) : IAnim
         int pagina,
         int tamanoPagina,
         long? fincaCodigo = null,
+        string? busqueda = null,
+        string? animalIdentificadorPrincipal = null,
+        string? categoriaAnimalNombre = null,
+        string? potreroNombre = null,
+        DateTime? animalFechaIngresoInicial = null,
         CancellationToken cancellationToken = default)
     {
         var paginaNormalizada = pagina <= 0 ? 1 : pagina;
@@ -25,6 +30,11 @@ public class AnimalConsultaService(IAnimalConsultaRepository repository) : IAnim
             paginaNormalizada,
             tamanoPaginaNormalizado,
             fincaCodigo,
+            busqueda,
+            animalIdentificadorPrincipal,
+            categoriaAnimalNombre,
+            potreroNombre,
+            animalFechaIngresoInicial,
             cancellationToken);
     }
 
@@ -42,5 +52,23 @@ public class AnimalConsultaService(IAnimalConsultaRepository repository) : IAnim
         CancellationToken cancellationToken = default)
     {
         return repository.ObtenerHistorialAsync(animalCodigo, fincaCodigo, cancellationToken);
+    }
+
+    public Task<(IEnumerable<GanadoViewModel> Items, int TotalRegistros)> FiltrarPaginado(
+        int pagina,
+        int tamanoPagina,
+        long? fincaCodigo,
+        AnimalConsultaFilterViewModel filtro,
+        CancellationToken cancellationToken = default)
+    {
+        var paginaNormalizada = pagina <= 0 ? 1 : pagina;
+        var tamanoPaginaNormalizado = tamanoPagina <= 0 ? 25 : Math.Min(tamanoPagina, 100);
+
+        return repository.FiltrarPaginado(
+            paginaNormalizada,
+            tamanoPaginaNormalizado,
+            fincaCodigo,
+            filtro,
+            cancellationToken);
     }
 }

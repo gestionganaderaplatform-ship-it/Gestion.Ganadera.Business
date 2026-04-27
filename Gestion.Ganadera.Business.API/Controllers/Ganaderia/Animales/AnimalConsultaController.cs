@@ -10,6 +10,7 @@ using Gestion.Ganadera.Business.Application.Features.Base.Models;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Animales.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Gestion.Ganadera.Business.Application.Features.Ganaderia.Animales.ViewModels;
 
 namespace Gestion.Ganadera.Business.API.Controllers.Ganaderia.Animales;
 
@@ -36,12 +37,22 @@ public class AnimalConsultaController(IAnimalConsultaService service) : Controll
         [FromQuery] int pagina = 1,
         [FromQuery] int tamanoPagina = 25,
         [FromQuery] long? fincaCodigo = null,
+        [FromQuery] string? busqueda = null,
+        [FromQuery(Name = "Animal_Identificador_Principal")] string? animalIdentificadorPrincipal = null,
+        [FromQuery(Name = "Categoria_Animal_Nombre")] string? categoriaAnimalNombre = null,
+        [FromQuery(Name = "Potrero_Nombre")] string? potreroNombre = null,
+        [FromQuery(Name = "Animal_Fecha_Ingreso_Inicial")] DateTime? animalFechaIngresoInicial = null,
         CancellationToken cancellationToken = default)
     {
         var (items, total) = await service.ObtenerPorPaginado(
             pagina,
             tamanoPagina,
             fincaCodigo,
+            busqueda,
+            animalIdentificadorPrincipal,
+            categoriaAnimalNombre,
+            potreroNombre,
+            animalFechaIngresoInicial,
             cancellationToken);
 
         return Ok(new { Items = items, TotalRegistros = total });
@@ -86,5 +97,24 @@ public class AnimalConsultaController(IAnimalConsultaService service) : Controll
     {
         var historial = await service.ObtenerHistorialAsync(codigo, fincaCodigo, cancellationToken);
         return Ok(historial);
+    }
+
+    [HttpPost("filtrar-paginado")]
+    [RequirePermission(ControllerPermission.GetPaged)]
+    public async Task<IActionResult> FiltrarPaginado(
+        [FromQuery] int pagina = 1,
+        [FromQuery] int tamanoPagina = 25,
+        [FromQuery] long? fincaCodigo = null,
+        [FromBody] AnimalConsultaFilterViewModel filtro = null!,
+        CancellationToken cancellationToken = default)
+    {
+        var (items, total) = await service.FiltrarPaginado(
+            pagina,
+            tamanoPagina,
+            fincaCodigo,
+            filtro,
+            cancellationToken);
+
+        return Ok(new { Items = items, TotalRegistros = total });
     }
 }

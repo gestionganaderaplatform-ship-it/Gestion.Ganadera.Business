@@ -2,6 +2,7 @@ using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using Gestion.Ganadera.Business.Application.Abstractions.Interfaces;
 using Gestion.Ganadera.Business.Application.Features.Seguridad.Auditoria.Interfaces;
 using Gestion.Ganadera.Business.Application.Features.Seguridad.Auditoria.Messages;
@@ -25,7 +26,7 @@ namespace Gestion.Ganadera.Business.Infrastructure.Services.Seguridad
         private readonly AppDbContext _dbContext = dbContext;
         private readonly ICurrentClientProvider _currentClientProvider = currentClientProvider;
 
-        public new async Task<(IEnumerable<AuditoriaViewModel> Items, int TotalRegistros)> ObtenerPorPaginado(int pagina, int tamañoPagina)
+        public new async Task<(IEnumerable<AuditoriaViewModel> Items, int TotalRegistros)> ObtenerPorPaginado(int pagina, int pageSize)
         {
             var clientCode = _currentClientProvider.ClientNumericId;
             if (!clientCode.HasValue)
@@ -34,15 +35,14 @@ namespace Gestion.Ganadera.Business.Infrastructure.Services.Seguridad
             }
 
             var pageNumber = pagina <= 0 ? 1 : pagina;
-            var pageSize = tamañoPagina <= 0 ? 25 : Math.Min(tamañoPagina, 100);
+            var safePageSize = pageSize <= 0 ? 25 : Math.Min(pageSize, 100);
 
             var query = BuildScopedQuery(clientCode.Value);
             var totalRegistros = await query.CountAsync();
             var entities = await query
-                .OrderByDescending(item => item.Auditoria_Fecha_Modificado)
-                .ThenByDescending(item => item.Auditoria_Codigo)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                .OrderBy(item => item.Auditoria_Codigo)
+                .Skip((pageNumber - 1) * safePageSize)
+                .Take(safePageSize)
                 .ToListAsync();
 
             return (_mapper.Map<IEnumerable<AuditoriaViewModel>>(entities), totalRegistros);
@@ -64,8 +64,7 @@ namespace Gestion.Ganadera.Business.Infrastructure.Services.Seguridad
             var query = BuildFilteredScopedQuery(filtros);
             var totalRegistros = await query.CountAsync();
             var entities = await query
-                .OrderByDescending(item => item.Auditoria_Fecha_Modificado)
-                .ThenByDescending(item => item.Auditoria_Codigo)
+                .OrderBy(item => item.Auditoria_Codigo)
                 .Skip((safePageNumber - 1) * safePageSize)
                 .Take(safePageSize)
                 .ToListAsync();
@@ -104,8 +103,9 @@ namespace Gestion.Ganadera.Business.Infrastructure.Services.Seguridad
 
             var entidades = await query.ToListAsync();
 
+            var endOfDay = filtro.Auditoria_Fecha_Modificado_Hasta!.Value.Date.AddDays(1).AddTicks(-1);
             return entidades
-                .Where(x => x.Auditoria_Fecha_Modificado <= filtro.Auditoria_Fecha_Modificado_Hasta!.Value)
+                .Where(x => x.Auditoria_Fecha_Modificado <= endOfDay)
                 .OrderByDescending(x => x.Auditoria_Fecha_Modificado)
                 .ToList();
         }
@@ -167,7 +167,8 @@ namespace Gestion.Ganadera.Business.Infrastructure.Services.Seguridad
             if (filtros.TryGetValue(nameof(AuditoriaViewModel.Auditoria_Fecha_Modificado_Hasta), out var modifiedToValue) &&
                 TryResolveDate(modifiedToValue, out var modifiedTo))
             {
-                query = query.Where(item => item.Auditoria_Fecha_Modificado <= modifiedTo);
+                var endOfDay = modifiedTo.Date.AddDays(1).AddTicks(-1);
+                query = query.Where(item => item.Auditoria_Fecha_Modificado <= endOfDay);
             }
 
             return query;
@@ -187,7 +188,7 @@ namespace Gestion.Ganadera.Business.Infrastructure.Services.Seguridad
                 case DateTime dateTime:
                     resolved = dateTime;
                     return true;
-                case string rawValue when DateTime.TryParse(rawValue, out var parsed):
+                case string rawValue when DateTime.TryParse(rawValue, null, DateTimeStyles.AdjustToUniversal, out var parsed):
                     resolved = parsed;
                     return true;
                 default:

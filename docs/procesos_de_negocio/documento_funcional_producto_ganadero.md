@@ -279,7 +279,9 @@ Ser la vista principal de consulta del ganado activo.
 - entrar a la ficha del animal
 
 #### Regla aprobada
-Ganado no ejecuta procesos. Su función es consultar, ubicar y entender animales.
+- Ganado no ejecuta procesos. Su función es consultar, ubicar y entender animales.
+- La búsqueda debe ser global y ejecutarse en el servidor para garantizar que se encuentre cualquier animal en la finca, sin importar la página actual.
+- El ordenamiento de identificadores debe ser "natural" (ej. 72XL-2 antes de 72XL-10) para facilitar la lectura operativa.
 
 ---
 

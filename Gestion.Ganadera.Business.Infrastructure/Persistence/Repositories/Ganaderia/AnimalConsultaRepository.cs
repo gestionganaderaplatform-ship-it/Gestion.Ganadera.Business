@@ -115,6 +115,11 @@ public class AnimalConsultaRepository(AppDbContext context) : IAnimalConsultaRep
         int pagina,
         int tamanoPagina,
         long? fincaCodigo = null,
+        string? busqueda = null,
+        string? animalIdentificadorPrincipal = null,
+        string? categoriaAnimalNombre = null,
+        string? potreroNombre = null,
+        DateTime? animalFechaIngresoInicial = null,
         CancellationToken cancellationToken = default)
     {
         var animales = context.Animales.AsNoTracking();
@@ -145,10 +150,45 @@ public class AnimalConsultaRepository(AppDbContext context) : IAnimalConsultaRep
                         Animal_Activo = animal.Animal_Activo
                     };
 
+        if (!string.IsNullOrWhiteSpace(busqueda))
+        {
+            var term = busqueda.Trim().ToLower();
+            query = query.Where(x =>
+                x.Animal_Identificador_Principal.ToLower().Contains(term) ||
+                x.Categoria_Animal_Nombre.ToLower().Contains(term) ||
+                x.Potrero_Nombre.ToLower().Contains(term)
+            );
+        }
+
+        // Aplicamos filtros específicos si vienen
+        if (!string.IsNullOrWhiteSpace(animalIdentificadorPrincipal))
+        {
+            var term = animalIdentificadorPrincipal.Trim().ToLower();
+            query = query.Where(x => x.Animal_Identificador_Principal.ToLower().Contains(term));
+        }
+
+        if (!string.IsNullOrWhiteSpace(categoriaAnimalNombre))
+        {
+            var term = categoriaAnimalNombre.Trim().ToLower();
+            query = query.Where(x => x.Categoria_Animal_Nombre.ToLower().Contains(term));
+        }
+
+        if (!string.IsNullOrWhiteSpace(potreroNombre))
+        {
+            var term = potreroNombre.Trim().ToLower();
+            query = query.Where(x => x.Potrero_Nombre.ToLower().Contains(term));
+        }
+
+        if (animalFechaIngresoInicial.HasValue)
+        {
+            var fecha = animalFechaIngresoInicial.Value.Date;
+            query = query.Where(x => x.Animal_Fecha_Ingreso_Inicial.Date == fecha);
+        }
+
         var totalRegistros = await query.CountAsync(cancellationToken);
 
         var items = await query
-            .OrderByDescending(x => x.Animal_Codigo)
+            .OrderBy(x => x.Animal_Codigo)
             .Skip((pagina - 1) * tamanoPagina)
             .Take(tamanoPagina)
             .ToListAsync(cancellationToken);
@@ -231,6 +271,76 @@ public class AnimalConsultaRepository(AppDbContext context) : IAnimalConsultaRep
                              }).ToListAsync(cancellationToken);
 
         return eventos;
+    }
+
+    public async Task<(IEnumerable<GanadoViewModel> Items, int TotalRegistros)> FiltrarPaginado(
+        int pagina,
+        int tamanoPagina,
+        long? fincaCodigo,
+        AnimalConsultaFilterViewModel filtro,
+        CancellationToken cancellationToken = default)
+    {
+        var animales = context.Animales.AsNoTracking();
+
+        if (fincaCodigo.HasValue)
+        {
+            animales = animales.Where(animal => animal.Finca_Codigo == fincaCodigo.Value);
+        }
+
+        var query = from animal in animales
+                    join potrero in context.Potreros.AsNoTracking() on animal.Potrero_Codigo equals potrero.Potrero_Codigo
+                    join categoria in context.CategoriasAnimal.AsNoTracking() on animal.Categoria_Animal_Codigo equals categoria.Categoria_Animal_Codigo
+                    from principalIdent in context.IdentificadoresAnimal.AsNoTracking()
+                        .Where(i => i.Animal_Codigo == animal.Animal_Codigo
+                                 && i.Identificador_Animal_Es_Principal
+                                 && i.Identificador_Animal_Activo)
+                        .OrderByDescending(i => i.Identificador_Animal_Codigo)
+                        .Take(1)
+                        .DefaultIfEmpty()
+                    select new GanadoViewModel
+                    {
+                        Animal_Codigo = animal.Animal_Codigo,
+                        Animal_Identificador_Principal = principalIdent != null ? principalIdent.Identificador_Animal_Valor : "Sin identificador",
+                        Categoria_Animal_Nombre = categoria.Categoria_Animal_Nombre,
+                        Potrero_Nombre = potrero.Potrero_Nombre,
+                        Animal_Origen_Ingreso = animal.Animal_Origen_Ingreso,
+                        Animal_Fecha_Ingreso_Inicial = animal.Animal_Fecha_Ingreso_Inicial,
+                        Animal_Activo = animal.Animal_Activo
+                    };
+
+        if (!string.IsNullOrWhiteSpace(filtro.Animal_Identificador_Principal))
+        {
+            var term = filtro.Animal_Identificador_Principal.Trim().ToLower();
+            query = query.Where(x => x.Animal_Identificador_Principal.ToLower().Contains(term));
+        }
+
+        if (!string.IsNullOrWhiteSpace(filtro.Categoria_Animal_Nombre))
+        {
+            var term = filtro.Categoria_Animal_Nombre.Trim().ToLower();
+            query = query.Where(x => x.Categoria_Animal_Nombre.ToLower().Contains(term));
+        }
+
+        if (!string.IsNullOrWhiteSpace(filtro.Potrero_Nombre))
+        {
+            var term = filtro.Potrero_Nombre.Trim().ToLower();
+            query = query.Where(x => x.Potrero_Nombre.ToLower().Contains(term));
+        }
+
+        if (filtro.Animal_Fecha_Ingreso_Inicial.HasValue)
+        {
+            var fecha = filtro.Animal_Fecha_Ingreso_Inicial.Value.Date;
+            query = query.Where(x => x.Animal_Fecha_Ingreso_Inicial.Date == fecha);
+        }
+
+        var totalRegistros = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderBy(x => x.Animal_Codigo)
+            .Skip((pagina - 1) * tamanoPagina)
+            .Take(tamanoPagina)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalRegistros);
     }
 
     private static IEnumerable<InicioDashboardDistribucionViewModel> MapDistribucion<T>(

@@ -182,14 +182,14 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Repositories.Base
             return (existentes, noExistentes);
         }
 
-        public async Task<(List<TEntity> Items, int TotalRegistros)> ObtenerPorPaginado(int pagina, int tamanoPagina)
+        public async Task<(List<TEntity> Items, int totalRegistros)> ObtenerPorPaginado(int pagina, int pageSize)
         {
             var query = _context.Set<TEntity>().AsQueryable();
 
             int totalRegistros = await query.CountAsync();
             List<TEntity> items = await AplicarOrdenPredeterminado(query)
-                .Skip((pagina - 1) * tamanoPagina)
-                .Take(tamanoPagina)
+                .Skip((pagina - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
             return (items, totalRegistros);

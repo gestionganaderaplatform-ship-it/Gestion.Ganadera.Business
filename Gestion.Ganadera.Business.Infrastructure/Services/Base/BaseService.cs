@@ -79,9 +79,9 @@ namespace Gestion.Ganadera.Business.Infrastructure.Services.Base
             return await _repository.ExistenVarios(codigos, propiedadClave);
         }
 
-        public async Task<(IEnumerable<TView> Items, int TotalRegistros)> ObtenerPorPaginado(int pagina, int tamañoPagina)
+        public async Task<(IEnumerable<TView> Items, int TotalRegistros)> ObtenerPorPaginado(int pagina, int pageSize)
         {
-            var (entities, totalRegistros) = await _repository.ObtenerPorPaginado(pagina, tamañoPagina);
+            var (entities, totalRegistros) = await _repository.ObtenerPorPaginado(pagina, pageSize);
             var items = _mapper.Map<IEnumerable<TView>>(entities);
             return (items, totalRegistros);
         }

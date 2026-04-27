@@ -456,10 +456,10 @@ namespace Gestion.Ganadera.Business.API.Controllers.Base
         [RequirePermission(ControllerPermission.GetPaged)]
         public async Task<IActionResult> ObtenerPorPaginado(
         [FromQuery] int pagina,
-        [FromQuery] int tamañoPagina)
+        [FromQuery] int pageSize)
         {
             var (items, totalRegistros) =
-                await _service.ObtenerPorPaginado(pagina, tamañoPagina);
+                await _service.ObtenerPorPaginado(pagina, pageSize);
 
             return Ok(new { Items = items, TotalRegistros = totalRegistros });
         }
@@ -658,6 +658,3 @@ namespace Gestion.Ganadera.Business.API.Controllers.Base
         }
     }
 }
-
-
-

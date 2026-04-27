@@ -12,6 +12,11 @@ public interface IAnimalConsultaService
         int pagina,
         int tamanoPagina,
         long? fincaCodigo = null,
+        string? busqueda = null,
+        string? animalIdentificadorPrincipal = null,
+        string? categoriaAnimalNombre = null,
+        string? potreroNombre = null,
+        DateTime? animalFechaIngresoInicial = null,
         CancellationToken cancellationToken = default);
 
     Task<AnimalViewModel?> Consultar(
@@ -22,5 +27,12 @@ public interface IAnimalConsultaService
     Task<IEnumerable<AnimalHistorialViewModel>> ObtenerHistorialAsync(
         long animalCodigo,
         long? fincaCodigo = null,
+        CancellationToken cancellationToken = default);
+
+    Task<(IEnumerable<GanadoViewModel> Items, int TotalRegistros)> FiltrarPaginado(
+        int pagina,
+        int tamanoPagina,
+        long? fincaCodigo,
+        AnimalConsultaFilterViewModel filtro,
         CancellationToken cancellationToken = default);
 }

@@ -16,7 +16,7 @@ namespace Gestion.Ganadera.Business.Application.Features.Base.Interfaces
         Task<List<TEntity>> ConsultarPorForanea<TProperty>(string propiedadForanea, TProperty valorForaneo);
         Task<bool> Existe(long codigo);
         Task<(List<TProperty> Existentes, List<TProperty> NoExistentes)> ExistenVarios<TProperty>(IEnumerable<TProperty> codigos, string propiedadClave);
-        Task<(List<TEntity> Items, int TotalRegistros)> ObtenerPorPaginado(int pagina, int tamañoPagina);
+        Task<(List<TEntity> Items, int totalRegistros)> ObtenerPorPaginado(int pagina, int pageSize);
         Task<bool> ExistePorForanea<TProperty>(string propiedadForanea, TProperty valorForaneo);
         Task<List<TEntity>> FiltrarPorPropiedades(Dictionary<string, object> filtros);
         Task<(List<TEntity> Items, int TotalRegistros)> FiltrarPorPropiedadesPaginado(
