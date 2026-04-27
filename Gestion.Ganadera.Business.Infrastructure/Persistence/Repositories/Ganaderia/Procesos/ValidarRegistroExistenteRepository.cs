@@ -5,18 +5,11 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Repositories.Gana
 
 public class ValidarRegistroExistenteRepository(AppDbContext context) : IValidarRegistroExistenteRepository
 {
-    public async Task<bool> ExisteIdentificadorActivoEnClienteAsync(
+    public async Task<bool> ExisteIdentificadorActivoEnFincaAsync(
         long fincaCodigo,
         string identificadorPrincipal,
-        long tipoIdentificadorCodigo,
         CancellationToken cancellationToken = default)
     {
-        var clienteCodigo = await context.Fincas
-            .AsNoTracking()
-            .Where(f => f.Finca_Codigo == fincaCodigo)
-            .Select(f => f.Cliente_Codigo)
-            .FirstOrDefaultAsync(cancellationToken);
-
         return await context.IdentificadoresAnimal
             .AsNoTracking()
             .Join(
@@ -26,9 +19,8 @@ public class ValidarRegistroExistenteRepository(AppDbContext context) : IValidar
                 (identificador, animal) => new { identificador, animal })
             .AnyAsync(
                 item => item.identificador.Identificador_Animal_Valor == identificadorPrincipal
-                        && item.identificador.Tipo_Identificador_Codigo == tipoIdentificadorCodigo
                         && item.identificador.Identificador_Animal_Activo
-                        && item.animal.Cliente_Codigo == clienteCodigo,
+                        && item.animal.Finca_Codigo == fincaCodigo,
                 cancellationToken);
     }
 

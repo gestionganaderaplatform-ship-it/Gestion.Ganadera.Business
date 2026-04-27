@@ -5,6 +5,7 @@ using Gestion.Ganadera.Business.API.Requests.Helpers;
 using Gestion.Ganadera.Business.API.Security.Permissions;
 using Gestion.Ganadera.Business.API.Security.Planes;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.RegistroExistente.Interfaces;
+using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.RegistroExistente.Messages;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.RegistroExistente.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -104,12 +105,33 @@ public class RegistroExistenteController(IRegistroExistenteService service) : Co
     [RequirePermission(ControllerPermission.GetPaged)]
     public async Task<IActionResult> VerificarIdentificadores(
         [FromQuery] long fincaCodigo,
-        [FromQuery] string identificadores,
+        [FromQuery] string? identificadores,
         CancellationToken cancellationToken = default)
     {
+        if (fincaCodigo <= 0)
+        {
+            return ApiProblemDetailsFactory.BadRequest(
+                HttpContext,
+                detail: ValidarRegistroExistenteMessages.FincaCodigoInvalido);
+        }
+
+        if (string.IsNullOrWhiteSpace(identificadores))
+        {
+            return ApiProblemDetailsFactory.BadRequest(
+                HttpContext,
+                detail: ValidarRegistroExistenteMessages.IdentificadoresConsultaRequeridos);
+        }
+
         var lista = identificadores
             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .ToList();
+
+        if (lista.Count == 0)
+        {
+            return ApiProblemDetailsFactory.BadRequest(
+                HttpContext,
+                detail: ValidarRegistroExistenteMessages.IdentificadoresConsultaRequeridos);
+        }
 
         var resultados = await service.ExistenIdentificadoresAsync(fincaCodigo, lista, cancellationToken);
         return Ok(new { Resultados = resultados });

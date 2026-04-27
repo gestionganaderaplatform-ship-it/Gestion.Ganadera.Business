@@ -15,10 +15,10 @@ namespace Gestion.Ganadera.Business.API.Extensions
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gestion.Ganadera.Business.API v1"));
+                    c.SwaggerEndpoint("./v1/swagger.json", "Gestion.Ganadera.Business.API v1"));
 
                 // Mantiene compatibilidad con rutas antiguas de OpenAPI usadas por el template.
-                app.MapGet("/openapi/v1.json", () => Results.Redirect("/swagger/v1/swagger.json"))
+                app.MapGet("/openapi/v1.json", () => Results.Redirect("v1/swagger.json"))
                     .ExcludeFromDescription();
             }
 

@@ -16,7 +16,8 @@ namespace Gestion.Ganadera.Business.API.Controllers.Ganaderia.Potreros;
 [Route("api/v{version:apiVersion}/ganaderia/potreros")]
 [ControllerPermissions(
    ControllerPermission.GetAll
-   | ControllerPermission.Create)]
+   | ControllerPermission.Create
+   | ControllerPermission.Update)]
 public class PotreroController(
     IPotreroService service,
     ILogger<PotreroController> logger)

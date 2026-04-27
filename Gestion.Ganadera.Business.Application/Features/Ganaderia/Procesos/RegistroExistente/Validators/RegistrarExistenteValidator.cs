@@ -12,6 +12,6 @@ public class RegistrarExistenteValidator : AbstractValidator<RegistrarExistenteR
 
         RuleFor(x => x.Fecha_Informada)
             .NotEmpty().WithMessage(ValidarRegistroExistenteMessages.FechaInformadaRequerida)
-            .Must(fecha => fecha <= DateTime.Now).WithMessage(ValidarRegistroExistenteMessages.FechaInformadaFutura);
+            .Must(fecha => fecha.Date <= DateTime.Today).WithMessage(ValidarRegistroExistenteMessages.FechaInformadaFutura);
     }
 }

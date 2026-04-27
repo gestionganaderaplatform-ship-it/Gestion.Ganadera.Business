@@ -25,10 +25,9 @@ public class ValidarCompraValidator : AbstractValidator<ValidarCompraRequest>
             .NotEmpty().WithMessage(CompraMessages.IdentificadorRequerido)
             .Matches(RegexPatterns.AlfanumericoConAcentosYPuntuacion).WithMessage(CompraMessages.IdentificadorFormatoInvalido)
             .MustAsync(async (request, identificador, cancellationToken) => 
-                !await registroExistenteRepository.ExisteIdentificadorActivoEnClienteAsync(
+                !await registroExistenteRepository.ExisteIdentificadorActivoEnFincaAsync(
                     request.Finca_Codigo,
                     identificador.Trim(),
-                    request.Tipo_Identificador_Codigo,
                     cancellationToken))
             .WithMessage(CompraMessages.IdentificadorDuplicado)
             .WithName(nameof(ValidarCompraRequest.Identificador_Principal));

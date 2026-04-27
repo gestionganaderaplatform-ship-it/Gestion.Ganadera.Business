@@ -74,7 +74,7 @@ La decision funcional queda asi:
 
 - la categoria define la banda esperada de edad
 - el backend entrega esa metadata junto con la categoria
-- el frontend solo la muestra y la usa para acotar la fecha de nacimiento opcional
+- en `uno a uno`, el frontend la muestra y la usa para acotar la fecha de nacimiento opcional
 - el frontend no debe volver a inferir rangos por nombre de categoria
 
 ## Flujo actual que queda establecido
@@ -91,14 +91,18 @@ Si son varios:
 - pedir cantidad total
 - preguntar si van para el mismo potrero o para distintos potreros
 - armar grupos por potrero
+- si la opcion es `distintos potreros`, cada grupo debe quedar en un potrero diferente
 
 Para cada grupo:
 
 - definir cantidad del grupo
 - definir potrero si aplica
 - completar fecha de ingreso
-- completar fecha de nacimiento comun si aplica
 - repartir la cantidad por categoria
+
+En `por grupos`, la fecha de nacimiento no se pide en la carga inicial.
+Si luego se necesita mayor precision por animal, eso debe resolverse en un ajuste posterior y no en esta captura masiva.
+La fecha de ingreso se trata como fecha de calendario y se valida contra el dia actual, no contra la hora exacta del servidor.
 
 ### Momento 3. Captura y cierre
 
@@ -141,7 +145,7 @@ Cuando el usuario elige `Identificador propio`:
 
 - el usuario escribe manualmente el identificador principal
 - no se pide marca ganadera
-- sigue aplicando la validacion de duplicados en la finca
+- sigue aplicando la validacion de duplicados por finca y valor de identificador, sin depender del tipo seleccionado
 
 ### Marcas ganaderas del cliente
 
@@ -187,6 +191,11 @@ Ese identificador:
 - ya existe `Identificador propio` como tipo operativo
 - ya se toma la marca ganadera del cliente para la generacion automatica
 - ya se toma el siguiente consecutivo por finca para formar el identificador automatico
+- ya se alineo la prevalidacion batch y la validacion final para duplicados por finca
+- ya se permite crear un potrero dentro del flujo sin salir del proceso
+- ya el potrero creado en flujo queda seleccionado en el registro actual
+- ya el proceso guarda un borrador local por finca mientras el usuario lo diligencia
+- ya el borrador se restaura automaticamente al volver a abrir el proceso en la misma finca
 
 ## Pendientes funcionales todavia abiertos
 
@@ -215,6 +224,12 @@ Todavia falta decidir si el catalogo fisico de `Rango_Edad` se consolida tambien
 ### 5. Flujo ideal para carga inicial fuerte
 
 Aunque el proceso ya mejoro bastante, todavia faltan ajustes para que sea mas rapido cuando el cliente entra por primera vez a cargar muchos animales de una finca.
+
+### 6. Extender autosave a otros procesos guiados
+
+La base ya quedo aplicada en `Registro de existente`.
+Falta replicarla en los siguientes procesos guiados para que cambiar de pestaÃ±a, recargar o salir de la ruta
+no haga perder trabajo parcial.
 
 ## Regla de trabajo mientras seguimos
 

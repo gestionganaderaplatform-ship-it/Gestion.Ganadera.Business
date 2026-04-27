@@ -25,10 +25,9 @@ public class ValidarRegistroExistenteValidator : AbstractValidator<ValidarRegist
             .NotEmpty().WithMessage(ValidarRegistroExistenteMessages.IdentificadorRequerido)
             .Matches(RegexPatterns.AlfanumericoConAcentosYPuntuacion).WithMessage(ValidarRegistroExistenteMessages.IdentificadorFormatoInvalido)
             .MustAsync(async (request, identificador, cancellationToken) => 
-                !await registroExistenteRepository.ExisteIdentificadorActivoEnClienteAsync(
+                !await registroExistenteRepository.ExisteIdentificadorActivoEnFincaAsync(
                     request.Finca_Codigo,
                     identificador.Trim(),
-                    request.Tipo_Identificador_Codigo,
                     cancellationToken))
             .WithMessage(ValidarRegistroExistenteMessages.IdentificadorDuplicado)
             .WithName(nameof(ValidarRegistroExistenteRequest.Identificador_Principal));

@@ -9,9 +9,11 @@ public static class ValidarRegistroExistenteMessages
     public const string RangoNoExiste = "El rango de edad indicado no existe.";
     public const string TipoIdentificadorNoExiste = "El tipo de identificador indicado no existe.";
     public const string IdentificadorDuplicado = "Ya existe un animal activo con este identificador en la base de datos.";
+    public const string IdentificadoresRepetidosEnLote = "No se pueden repetir identificadores dentro del lote.";
     public const string SexoInvalido = "El formato del sexo es invalido.";
     public const string IdentificadorRequerido = "El identificador principal es obligatorio.";
     public const string IdentificadorFormatoInvalido = "El formato del identificador es invalido.";
+    public const string IdentificadoresConsultaRequeridos = "Debe indicar al menos un identificador para validar.";
     public const string FincaCodigoInvalido = "El codigo de la finca debe ser mayor a 0.";
     public const string PotreroCodigoInvalido = "El codigo del potrero debe ser mayor a 0.";
     public const string CategoriaCodigoInvalido = "El codigo de la categoria debe ser mayor a 0.";

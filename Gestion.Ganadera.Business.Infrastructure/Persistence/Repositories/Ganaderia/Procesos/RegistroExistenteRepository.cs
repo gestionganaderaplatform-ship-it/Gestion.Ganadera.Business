@@ -204,29 +204,22 @@ public class RegistroExistenteRepository(AppDbContext context) : IRegistroExiste
         return tipoIdentificadorInternoCodigo.Value;
     }
 
-    public async Task<bool> ExisteIdentificadorActivoEnClienteAsync(
+    public async Task<bool> ExisteIdentificadorActivoEnFincaAsync(
         long fibraCodigo,
         string identificadorPrincipal,
-        long tipoIdentificadorCodigo,
         CancellationToken cancellationToken = default)
     {
-        var clienteCodigo = await context.Fincas
-            .AsNoTracking()
-            .Where(f => f.Finca_Codigo == fibraCodigo)
-            .Select(f => f.Cliente_Codigo)
-            .FirstOrDefaultAsync(cancellationToken);
-
         return await context.IdentificadoresAnimal
+            .AsNoTracking()
             .Join(
-                context.Animales,
+                context.Animales.AsNoTracking(),
                 identificador => identificador.Animal_Codigo,
                 animal => animal.Animal_Codigo,
                 (identificador, animal) => new { identificador, animal })
             .AnyAsync(
                 item => item.identificador.Identificador_Animal_Valor == identificadorPrincipal &&
-                        item.identificador.Tipo_Identificador_Codigo == tipoIdentificadorCodigo &&
                         item.identificador.Identificador_Animal_Activo &&
-                        item.animal.Cliente_Codigo == clienteCodigo,
+                        item.animal.Finca_Codigo == fibraCodigo,
                 cancellationToken);
     }
 
