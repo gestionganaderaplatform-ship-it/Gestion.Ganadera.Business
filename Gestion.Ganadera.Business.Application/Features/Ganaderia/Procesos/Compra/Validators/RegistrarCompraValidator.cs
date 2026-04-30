@@ -12,7 +12,7 @@ public class RegistrarCompraValidator : AbstractValidator<RegistrarCompraRequest
 
         RuleFor(x => x.Fecha_Compra)
             .NotEmpty().WithMessage(CompraMessages.FechaCompraRequerida)
-            .Must(fecha => fecha <= DateTime.Now).WithMessage(CompraMessages.FechaCompraFutura);
+            .Must(fecha => fecha.Date <= DateTime.Today).WithMessage(CompraMessages.FechaCompraFutura);
 
         RuleFor(x => x.Origen_Vendedor)
             .NotEmpty().WithMessage(CompraMessages.OrigenVendedorRequerido);
