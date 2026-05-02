@@ -39,6 +39,9 @@ no abrir el siguiente proceso hasta que el actual tenga backend utilizable y fro
 - [x] Consultar siguiente consecutivo por finca para identificacion automatica
 - [x] Tomar marca ganadera del cliente como base del identificador automatico
 
+### Deuda tecnica inmediata
+- [ ] Revisar y unificar la consulta de siguiente consecutivo para identificacion automatica. No debe seguir replicada por proceso si ya existe un servicio o endpoint transversal reutilizable.
+
 ## Procesos Fase 1
 
 ### Proceso 1. Registro de existente

@@ -198,3 +198,12 @@ Para la relación operativa:
 - nacimiento debe crear el animal dentro del proceso y no como alta paralela
 - la elegibilidad de la madre debe centralizarse
 - este proceso será clave para modelo de datos por la relación madre-cría
+
+## 21. Implementación backend inicial
+- Endpoint del proceso: `POST /api/v1/ganaderia/procesos/nacimiento`.
+- Endpoint de prevalidación: `POST /api/v1/ganaderia/procesos/nacimiento/validar`.
+- Endpoint de consecutivo: `GET /api/v1/ganaderia/procesos/nacimiento/siguiente-consecutivo?fincaCodigo={id}`.
+- La validación final vive en backend y controla finca, madre elegible, potrero, categoría, tipo de identificador, sexo, fecha e identificador duplicado por finca.
+- El registro crea la cría como animal activo con origen `NACIMIENTO`.
+- El registro crea identificador principal, identificador interno del sistema, evento ganadero, detalle del nacimiento y relación familiar madre-cría.
+- El peso al nacer y la observación son opcionales.
