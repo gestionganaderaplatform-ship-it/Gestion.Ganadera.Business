@@ -5,20 +5,33 @@ namespace Gestion.Ganadera.Business.API.Configuration.Providers
     public sealed class CurrentClientProvider(IHttpContextAccessor httpContextAccessor)
         : ICurrentClientProvider
     {
+        private static readonly string[] PreferredTextualClientClaims =
+        [
+            "cliente_codigo_publico",
+            "cliente_codigo",
+            "client_id"
+        ];
+
+        private static readonly string[] PreferredNumericClientClaims =
+        [
+            "cliente_codigo",
+            "client_id"
+        ];
+
         private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
         public long? ClientNumericId
         {
             get
             {
-                var value = GetClaimValue("cliente_codigo");
+                var value = GetClaimValue(PreferredNumericClientClaims);
                 return long.TryParse(value, out var numericId)
                     ? numericId
                     : null;
             }
         }
 
-        public string? ClientId => GetClaimValue("cliente_codigo_publico", "cliente_codigo");
+        public string? ClientId => GetClaimValue(PreferredTextualClientClaims);
 
         private string? GetClaimValue(params string[] claimTypes)
         {

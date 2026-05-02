@@ -14,4 +14,5 @@ public class AnimalViewModel
     public DateTime Animal_Fecha_Ingreso_Inicial { get; set; }
     public DateTime Animal_Fecha_Registro_Ingreso { get; set; }
     public DateTime Animal_Fecha_Ultimo_Evento { get; set; }
+    public int Animal_Total_Partos { get; set; }
 }

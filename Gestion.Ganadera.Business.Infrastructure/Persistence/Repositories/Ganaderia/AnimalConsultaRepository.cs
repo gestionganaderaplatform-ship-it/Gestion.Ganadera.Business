@@ -1,5 +1,6 @@
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Animales.Interfaces;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Animales.ViewModels;
+using Gestion.Ganadera.Business.Domain.Features.Ganaderia;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Repositories.Ganaderia;
@@ -220,6 +221,13 @@ public class AnimalConsultaRepository(AppDbContext context) : IAnimalConsultaRep
                         .OrderByDescending(i => i.Identificador_Animal_Codigo)
                         .Take(1)
                         .DefaultIfEmpty()
+                    let totalPartos = context.AnimalesRelacionesFamiliares
+                        .IgnoreQueryFilters()
+                        .AsNoTracking()
+                        .Count(relacion =>
+                            relacion.Animal_Codigo_Madre == animal.Animal_Codigo &&
+                            relacion.Animal_Relacion_Familiar_Activa &&
+                            relacion.Animal_Relacion_Familiar_Tipo == AnimalRelacionFamiliarTipo.MadreCria)
                     select new AnimalViewModel
                     {
                         Animal_Codigo = animal.Animal_Codigo,
@@ -232,7 +240,8 @@ public class AnimalConsultaRepository(AppDbContext context) : IAnimalConsultaRep
                         Animal_Origen_Ingreso = animal.Animal_Origen_Ingreso,
                         Animal_Fecha_Ingreso_Inicial = animal.Animal_Fecha_Ingreso_Inicial,
                         Animal_Fecha_Registro_Ingreso = animal.Animal_Fecha_Registro_Ingreso,
-                        Animal_Fecha_Ultimo_Evento = animal.Animal_Fecha_Ultimo_Evento
+                        Animal_Fecha_Ultimo_Evento = animal.Animal_Fecha_Ultimo_Evento,
+                        Animal_Total_Partos = totalPartos
                     };
 
         return await query.FirstOrDefaultAsync(cancellationToken);
@@ -305,6 +314,7 @@ public class AnimalConsultaRepository(AppDbContext context) : IAnimalConsultaRep
                         Animal_Codigo = animal.Animal_Codigo,
                         Animal_Identificador_Principal = principalIdent != null ? principalIdent.Identificador_Animal_Valor : "Sin identificador",
                         Categoria_Animal_Nombre = categoria.Categoria_Animal_Nombre,
+                        Potrero_Codigo = potrero.Potrero_Codigo,
                         Potrero_Nombre = potrero.Potrero_Nombre,
                         Animal_Sexo = animal.Animal_Sexo
                     };

@@ -16,6 +16,7 @@ using Gestion.Ganadera.Business.Application.Features.Ganaderia.Animales.Interfac
 using Gestion.Ganadera.Business.Infrastructure.Persistence.Repositories.Ganaderia;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.RegistroExistente.Interfaces;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.Compra.Interfaces;
+using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.Nacimiento.Interfaces;
 using Gestion.Ganadera.Business.Infrastructure.Persistence.Repositories.Ganaderia.Procesos;
 using Gestion.Ganadera.Business.Infrastructure.Services.Ganaderia.Procesos;
 
@@ -60,6 +61,8 @@ namespace Gestion.Ganadera.Business.API.Extensions
             builder.Services.AddScoped<IRegistroExistenteService, RegistroExistenteService>();
             builder.Services.AddScoped<ICompraRepository, CompraRepository>();
             builder.Services.AddScoped<ICompraService, CompraService>();
+            builder.Services.AddScoped<INacimientoRepository, NacimientoRepository>();
+            builder.Services.AddScoped<INacimientoService, NacimientoService>();
 
             return builder;
         }
