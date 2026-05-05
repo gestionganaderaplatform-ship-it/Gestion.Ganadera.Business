@@ -123,4 +123,8 @@ Genera evento de traslado con finca origen, finca destino, potrero destino, fech
 ## 20. Observaciones de diseño funcional
 - Este proceso no debe confundirse con salida definitiva.
 - La continuidad del historial es obligatoria.
-- Debe quedar claro en reportes que el animal sigue en la misma cuenta, pero cambió de finca.
+## 21. Estado de Implementación
+
+- **Backend (Business API)**: ✅ Completo. Implementado con soporte para transacciones atómicas y actualización de estado derivado (`Finca_Codigo` y `Potrero_Codigo`).
+- **Frontend (Web)**: ⚠️ Parcial. Esqueleto base disponible, pendiente integración con los nuevos endpoints de la API.
+- **Última actualización técnica**: 2026-05-04.

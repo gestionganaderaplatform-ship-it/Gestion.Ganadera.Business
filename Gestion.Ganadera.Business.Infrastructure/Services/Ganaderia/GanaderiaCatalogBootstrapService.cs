@@ -26,6 +26,12 @@ public sealed class GanaderiaCatalogBootstrapService(
         await EnsureTiposIdentificadorAsync(clienteCodigo, cancellationToken);
         await EnsureCategoriasAnimalAsync(clienteCodigo, cancellationToken);
         await EnsureRangosEdadAsync(clienteCodigo, cancellationToken);
+        await EnsureCausasMuerteAsync(clienteCodigo, cancellationToken);
+        await EnsureVacunasEnfermedadesAsync(clienteCodigo, cancellationToken);
+        await EnsureTratamientoTiposAsync(clienteCodigo, cancellationToken);
+        await EnsureTratamientoProductosAsync(clienteCodigo, cancellationToken);
+        await EnsurePalpacionResultadosAsync(clienteCodigo, cancellationToken);
+        await EnsureDescarteMotivosAsync(clienteCodigo, cancellationToken);
     }
 
     private async Task EnsureTiposIdentificadorAsync(long clienteCodigo, CancellationToken cancellationToken)
@@ -152,6 +158,187 @@ public sealed class GanaderiaCatalogBootstrapService(
         }
 
         _dbContext.RangosEdad.AddRange(faltantes);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task EnsureCausasMuerteAsync(long clienteCodigo, CancellationToken cancellationToken)
+    {
+        var causasBase = GanaderiaCatalogosBase.ObtenerCausasMuerte();
+        var nombresBase = causasBase
+            .Select(item => item.Causa_Muerte_Nombre)
+            .ToArray();
+
+        var existentes = await _dbContext.CausasMuerte
+            .IgnoreQueryFilters()
+            .Where(item =>
+                item.Cliente_Codigo == clienteCodigo &&
+                nombresBase.Contains(item.Causa_Muerte_Nombre))
+            .Select(item => item.Causa_Muerte_Nombre)
+            .ToListAsync(cancellationToken);
+
+        var faltantes = causasBase
+            .Where(item => !existentes.Contains(item.Causa_Muerte_Nombre, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+
+        if (faltantes.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var faltante in faltantes)
+        {
+            faltante.Cliente_Codigo = clienteCodigo;
+        }
+
+        _dbContext.CausasMuerte.AddRange(faltantes);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task EnsureVacunasEnfermedadesAsync(long clienteCodigo, CancellationToken cancellationToken)
+    {
+        var enfermedadesBase = GanaderiaCatalogosBase.ObtenerVacunasEnfermedades();
+        var nombresBase = enfermedadesBase
+            .Select(item => item.Vacuna_Enfermedad_Nombre)
+            .ToArray();
+
+        var existentes = await _dbContext.VacunasEnfermedades
+            .IgnoreQueryFilters()
+            .Where(item =>
+                item.Cliente_Codigo == clienteCodigo &&
+                nombresBase.Contains(item.Vacuna_Enfermedad_Nombre))
+            .Select(item => item.Vacuna_Enfermedad_Nombre)
+            .ToListAsync(cancellationToken);
+
+        var faltantes = enfermedadesBase
+            .Where(item => !existentes.Contains(item.Vacuna_Enfermedad_Nombre, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+
+        if (faltantes.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var faltante in faltantes)
+        {
+            faltante.Cliente_Codigo = clienteCodigo;
+        }
+
+        _dbContext.VacunasEnfermedades.AddRange(faltantes);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task EnsureTratamientoTiposAsync(long clienteCodigo, CancellationToken cancellationToken)
+    {
+        var tiposBase = GanaderiaCatalogosBase.ObtenerTratamientoTipos();
+        var nombresBase = tiposBase.Select(item => item.Tratamiento_Tipo_Nombre).ToArray();
+
+        var existentes = await _dbContext.TratamientosTipos
+            .IgnoreQueryFilters()
+            .Where(item => item.Cliente_Codigo == clienteCodigo && nombresBase.Contains(item.Tratamiento_Tipo_Nombre))
+            .Select(item => item.Tratamiento_Tipo_Nombre)
+            .ToListAsync(cancellationToken);
+
+        var faltantes = tiposBase
+            .Where(item => !existentes.Contains(item.Tratamiento_Tipo_Nombre, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+
+        if (faltantes.Count == 0) return;
+
+        foreach (var faltante in faltantes) { faltante.Cliente_Codigo = clienteCodigo; }
+
+        _dbContext.TratamientosTipos.AddRange(faltantes);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task EnsureTratamientoProductosAsync(long clienteCodigo, CancellationToken cancellationToken)
+    {
+        var productosBase = GanaderiaCatalogosBase.ObtenerTratamientoProductos();
+        var nombresBase = productosBase.Select(item => item.Tratamiento_Producto_Nombre).ToArray();
+
+        var existentes = await _dbContext.TratamientosProductos
+            .IgnoreQueryFilters()
+            .Where(item => item.Cliente_Codigo == clienteCodigo && nombresBase.Contains(item.Tratamiento_Producto_Nombre))
+            .Select(item => item.Tratamiento_Producto_Nombre)
+            .ToListAsync(cancellationToken);
+
+        var faltantes = productosBase
+            .Where(item => !existentes.Contains(item.Tratamiento_Producto_Nombre, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+
+        if (faltantes.Count == 0) return;
+
+        // Recuperar tipos para asignar la relación obligatoria
+        var tipos = await _dbContext.TratamientosTipos
+            .IgnoreQueryFilters()
+            .Where(item => item.Cliente_Codigo == clienteCodigo)
+            .ToListAsync(cancellationToken);
+
+        var tipoAntibiotico = tipos.FirstOrDefault(t => t.Tratamiento_Tipo_Nombre.Contains("Antibiótico"))?.Tratamiento_Tipo_Codigo;
+        var tipoDesparasitante = tipos.FirstOrDefault(t => t.Tratamiento_Tipo_Nombre.Contains("Desparasitante"))?.Tratamiento_Tipo_Codigo;
+        var tipoVitamina = tipos.FirstOrDefault(t => t.Tratamiento_Tipo_Nombre.Contains("Vitamina"))?.Tratamiento_Tipo_Codigo;
+        var tipoDefault = tipos.FirstOrDefault()?.Tratamiento_Tipo_Codigo ?? 0;
+
+        foreach (var faltante in faltantes) 
+        { 
+            faltante.Cliente_Codigo = clienteCodigo; 
+            
+            if (faltante.Tratamiento_Producto_Nombre.Contains("Ivermectina", StringComparison.OrdinalIgnoreCase))
+                faltante.Tratamiento_Tipo_Codigo = tipoDesparasitante ?? tipoDefault;
+            else if (faltante.Tratamiento_Producto_Nombre.Contains("Oxitetraciclina", StringComparison.OrdinalIgnoreCase))
+                faltante.Tratamiento_Tipo_Codigo = tipoAntibiotico ?? tipoDefault;
+            else if (faltante.Tratamiento_Producto_Nombre.Contains("Complejo B", StringComparison.OrdinalIgnoreCase))
+                faltante.Tratamiento_Tipo_Codigo = tipoVitamina ?? tipoDefault;
+            else
+                faltante.Tratamiento_Tipo_Codigo = tipoDefault;
+        }
+
+        _dbContext.TratamientosProductos.AddRange(faltantes);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task EnsurePalpacionResultadosAsync(long clienteCodigo, CancellationToken cancellationToken)
+    {
+        var resultadosBase = GanaderiaCatalogosBase.ObtenerPalpacionResultados();
+        var nombresBase = resultadosBase.Select(item => item.Palpacion_Resultado_Nombre).ToArray();
+
+        var existentes = await _dbContext.PalpacionesResultados
+            .IgnoreQueryFilters()
+            .Where(item => item.Cliente_Codigo == clienteCodigo && nombresBase.Contains(item.Palpacion_Resultado_Nombre))
+            .Select(item => item.Palpacion_Resultado_Nombre)
+            .ToListAsync(cancellationToken);
+
+        var faltantes = resultadosBase
+            .Where(item => !existentes.Contains(item.Palpacion_Resultado_Nombre, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+
+        if (faltantes.Count == 0) return;
+
+        foreach (var faltante in faltantes) { faltante.Cliente_Codigo = clienteCodigo; }
+
+        _dbContext.PalpacionesResultados.AddRange(faltantes);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task EnsureDescarteMotivosAsync(long clienteCodigo, CancellationToken cancellationToken)
+    {
+        var motivosBase = GanaderiaCatalogosBase.ObtenerDescarteMotivos();
+        var nombresBase = motivosBase.Select(item => item.Descarte_Motivo_Nombre).ToArray();
+
+        var existentes = await _dbContext.DescartesMotivos
+            .IgnoreQueryFilters()
+            .Where(item => item.Cliente_Codigo == clienteCodigo && nombresBase.Contains(item.Descarte_Motivo_Nombre))
+            .Select(item => item.Descarte_Motivo_Nombre)
+            .ToListAsync(cancellationToken);
+
+        var faltantes = motivosBase
+            .Where(item => !existentes.Contains(item.Descarte_Motivo_Nombre, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+
+        if (faltantes.Count == 0) return;
+
+        foreach (var faltante in faltantes) { faltante.Cliente_Codigo = clienteCodigo; }
+
+        _dbContext.DescartesMotivos.AddRange(faltantes);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

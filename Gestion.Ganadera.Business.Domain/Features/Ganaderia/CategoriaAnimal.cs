@@ -9,4 +9,14 @@ public class CategoriaAnimal : AuditableEntity
     public string? Categoria_Animal_Sexo_Esperado { get; set; }
     public int Categoria_Animal_Orden { get; set; }
     public bool Categoria_Animal_Activa { get; set; } = true;
+
+    /// <summary>
+    /// Codigo de la categoria a la que el animal deberia pasar naturalmente.
+    /// </summary>
+    public long? Categoria_Animal_Siguiente_Codigo { get; set; }
+
+    /// <summary>
+    /// Meses sugeridos de permanencia en esta categoria antes de proponer el cambio.
+    /// </summary>
+    public int? Categoria_Animal_Meses_Sugeridos { get; set; }
 }

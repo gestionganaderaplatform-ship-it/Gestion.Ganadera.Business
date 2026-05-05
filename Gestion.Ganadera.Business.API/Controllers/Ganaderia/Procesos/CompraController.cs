@@ -4,6 +4,7 @@ using Gestion.Ganadera.Business.API.ErrorHandling;
 using Gestion.Ganadera.Business.API.Requests.Helpers;
 using Gestion.Ganadera.Business.API.Security.Permissions;
 using Gestion.Ganadera.Business.API.Security.Planes;
+using Gestion.Ganadera.Business.Application.Features.Ganaderia.Identificadores.Interfaces;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.Compra.Interfaces;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.Compra.Messages;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.Compra.Models;
@@ -17,7 +18,9 @@ namespace Gestion.Ganadera.Business.API.Controllers.Ganaderia.Procesos;
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/ganaderia/procesos/compra")]
 [ControllerPermissions(ControllerPermission.Create | ControllerPermission.GetPaged)]
-public class CompraController(ICompraService service) : ControllerBase
+public class CompraController(
+    ICompraService service,
+    IIdentificadorService identificadorService) : ControllerBase
 {
     [HttpGet("siguiente-consecutivo")]
     [RequirePermission(ControllerPermission.GetPaged)]
@@ -32,10 +35,11 @@ public class CompraController(ICompraService service) : ControllerBase
                 detail: CompraMessages.FincaCodigoInvalido);
         }
 
-        var consecutivo = await service.ObtenerSiguienteConsecutivoAsync(fincaCodigo, cancellationToken);
+        var consecutivo = await identificadorService.ObtenerSiguienteConsecutivoAsync(fincaCodigo, cancellationToken);
 
         return Ok(new { Siguiente_Consecutivo = consecutivo });
     }
+
 
     [HttpPost("validar")]
     [RequirePermission(ControllerPermission.Create)]

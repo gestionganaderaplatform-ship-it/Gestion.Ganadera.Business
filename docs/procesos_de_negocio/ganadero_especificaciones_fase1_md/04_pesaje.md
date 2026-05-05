@@ -55,6 +55,7 @@ Se usa cuando se pesa uno o varios animales.
 - En modalidad grupo, la captura se mantiene secuencial animal por animal.
 - En modalidad grupo, todos comparten la fecha si el usuario no la cambia.
 - Si el peso luce atípico, el sistema advierte sin bloquear salvo reglas futuras.
+- **Límite de peso: mínimo 5 kg, máximo 1500 kg.**
 
 ## 11. Bloqueos
 - No hay animal ni grupo seleccionado.
@@ -106,8 +107,8 @@ El peso queda registrado y actualizado como última referencia del animal.
 Genera evento de pesaje con fecha del evento, fecha de registro, usuario y peso registrado.
 
 ## 19. Impacto en estados derivados del animal
-- ultima_referencia_peso = peso registrado
-- fecha_ultimo_pesaje = fecha_pesaje
+- **Animal_Peso** = peso registrado
+- **Animal_Fecha_Peso** = fecha_pesaje
 - condicion_activo = sin cambio
 - potrero_actual = sin cambio
 
@@ -115,3 +116,37 @@ Genera evento de pesaje con fecha del evento, fecha de registro, usuario y peso 
 - El proceso debe priorizar velocidad operativa.
 - Conviene mostrar contexto básico del animal antes de guardar.
 - El sistema no debe bloquear por atípicos salvo que negocio defina umbrales duros después.
+
+## 21. Implementación técnica
+
+### Endpoints
+- `POST /api/v1/ganaderia/procesos/pesaje` - Registro individual
+- `POST /api/v1/ganaderia/procesos/pesaje/lote` - Registro por grupo
+
+### Modelo de request (individual)
+```json
+{
+  "Animal_Codigo": 1,
+  "Fecha_Pesaje": "2026-05-02",
+  "Peso": 350.00,
+  "Observacion": "Pesaje de control"
+}
+```
+
+### Modelo de request (lote)
+```json
+{
+  "Fecha_Pesaje": "2026-05-02",
+  "Observacion": "Pesaje routine",
+  "Animales": [
+    { "Animal_Codigo": 1, "Peso": 350.00 },
+    { "Animal_Codigo": 2, "Peso": 380.00 }
+  ]
+}
+```
+
+### Tablas afectadas
+- `Evento_Ganadero` (tronco)
+- `Evento_Ganadero_Animal` (relación)
+- `Evento_Detalle_Pesaje` (historial de todos los pesajes)
+- `Animal` (actualiza `Animal_Peso` = último peso, `Animal_Fecha_Peso` = fecha del último peso)

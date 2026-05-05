@@ -35,17 +35,17 @@ public sealed class AnimalConfiguration : IEntityTypeConfiguration<Animal>
         entity.Property(x => x.Animal_Fecha_Registro_Ingreso)
             .HasDefaultValueSql("SYSDATETIME()");
 
-        entity.HasOne<Finca>()
+        entity.HasOne(x => x.Finca)
             .WithMany()
             .HasForeignKey(x => x.Finca_Codigo)
             .OnDelete(DeleteBehavior.Restrict);
 
-        entity.HasOne<Potrero>()
+        entity.HasOne(x => x.Potrero)
             .WithMany()
             .HasForeignKey(x => x.Potrero_Codigo)
             .OnDelete(DeleteBehavior.Restrict);
 
-        entity.HasOne<CategoriaAnimal>()
+        entity.HasOne(x => x.Categoria)
             .WithMany()
             .HasForeignKey(x => x.Categoria_Animal_Codigo)
             .OnDelete(DeleteBehavior.Restrict);

@@ -24,7 +24,6 @@ public static class ValidarRegistroExistenteMessages
     public const string FechaInformadaFutura = "La fecha del evento no puede ser mayor a la fecha actual.";
     public const string FechaNacimientoFutura = "La fecha de nacimiento no puede ser futura.";
     public const string CategoriaIncompatibleConSexo = "La categoria indicada no es compatible con el sexo del animal.";
-    public const string TipoIdentificadorInternoNoDisponible = "No existe el tipo de identificador interno del sistema para este cliente.";
     public const string LoteSinAnimales = "Debe incluir al menos un animal en el lote.";
     public const string LoteSuperaMaximo = "El lote no puede superar los 100 animales por transaccion.";
     public const string IdentificadorLongitudMaxima = "El identificador principal no puede superar los 50 caracteres.";

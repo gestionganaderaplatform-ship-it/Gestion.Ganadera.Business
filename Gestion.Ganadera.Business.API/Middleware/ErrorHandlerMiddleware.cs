@@ -71,6 +71,7 @@ namespace Gestion.Ganadera.Business.API.Middleware
                         BadHttpRequestException or JsonException => ApiErrorMessages.InvalidJsonTitle,
                         UnauthorizedAccessException => ApiErrorMessages.UnauthorizedTitle,
                         KeyNotFoundException => ApiErrorMessages.RequestedRecordNotFound,
+                        InvalidOperationException => error.Message,
                         _ => ApiErrorMessages.UnexpectedErrorDetail
                     };
 

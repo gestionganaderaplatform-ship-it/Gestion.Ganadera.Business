@@ -144,3 +144,17 @@ Puede actualizar:
 ## 20. Observaciones de diseño funcional
 - resultado debe venir de catálogo controlado
 - elegibilidad por sexo y categoría debe quedar centralizada y no dispersa
+
+## 21. Maestros requeridos
+- **PalpacionResultado**: Catálogo controlado de diagnósticos reproductivos (Ej: Preñada, Vacía, En duda, Quiste Folicular, Cuerpo Lúteo, Involución Uterina).
+- **ResponsableRevision**: (Opcional) Catálogo de veterinarios o personal técnico autorizado.
+
+## 22. Impacto en estados derivados del animal
+Para mantener el patrón de "Snapshot" del sistema, se actualizarán los siguientes campos en la entidad **Animal**:
+- **Animal_Ultima_Palpacion_Fecha**: Fecha de la última revisión realizada.
+- **Animal_Ultimo_Resultado_Reproductivo**: El nombre del resultado obtenido (Ej: "Preñada").
+- **Animal_Estado_Reproductivo_Actual**: Estado simplificado derivado (Ej: "Preñada", "Abierta").
+
+## 23. Reglas de Elegibilidad (Backend)
+- **Sexo**: Únicamente animales de sexo "Hembra" (H).
+- **Edad/Categoría**: Animales que pertenezcan a categorías reproductivas (Novilla de Vientre, Vaca Parida, Vaca Horra).

@@ -4,6 +4,8 @@ using Gestion.Ganadera.Business.API.ErrorHandling;
 using Gestion.Ganadera.Business.API.Requests.Helpers;
 using Gestion.Ganadera.Business.API.Security.Permissions;
 using Gestion.Ganadera.Business.API.Security.Planes;
+using Gestion.Ganadera.Business.Application.Features.Ganaderia.Identificadores.Interfaces;
+using Gestion.Ganadera.Business.Application.Features.Ganaderia.Identificadores.Models;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.RegistroExistente.Interfaces;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.RegistroExistente.Messages;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.RegistroExistente.Models;
@@ -17,7 +19,9 @@ namespace Gestion.Ganadera.Business.API.Controllers.Ganaderia.Procesos;
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/ganaderia/procesos/registro-existente")]
 [ControllerPermissions(ControllerPermission.Create | ControllerPermission.GetPaged)]
-public class RegistroExistenteController(IRegistroExistenteService service) : ControllerBase
+public class RegistroExistenteController(
+    IRegistroExistenteService service,
+    IIdentificadorService identificadorService) : ControllerBase
 {
     [HttpPost("validar")]
     [RequirePermission(ControllerPermission.Create)]
@@ -97,7 +101,7 @@ public class RegistroExistenteController(IRegistroExistenteService service) : Co
         [FromQuery] long fincaCodigo,
         CancellationToken cancellationToken = default)
     {
-        var siguienteConsecutivo = await service.ObtenerSiguienteConsecutivoAsync(fincaCodigo, cancellationToken);
+        var siguienteConsecutivo = await identificadorService.ObtenerSiguienteConsecutivoAsync(fincaCodigo, cancellationToken);
         return Ok(new { Siguiente_Consecutivo = siguienteConsecutivo });
     }
 
@@ -133,7 +137,8 @@ public class RegistroExistenteController(IRegistroExistenteService service) : Co
                 detail: ValidarRegistroExistenteMessages.IdentificadoresConsultaRequeridos);
         }
 
-        var resultados = await service.ExistenIdentificadoresAsync(fincaCodigo, lista, cancellationToken);
+        var resultados = await identificadorService.VerificarExistenciaIdentificadoresAsync(fincaCodigo, lista, cancellationToken);
         return Ok(new { Resultados = resultados });
     }
 }
+

@@ -113,3 +113,27 @@ Genera evento de muerte con fecha, causa, observación, usuario y fecha de regis
 - La causa debe manejarse desde catálogo controlado con opción genérica o pendiente.
 - El proceso no debe permitir duplicar una salida definitiva.
 - Conviene permitir distinguir reportado por y registrado por cuando negocio lo necesite.
+
+## Estado de implementación
+
+### Endpoints
+- `POST /api/v1/ganaderia/procesos/muerte` - Registro individual
+
+### Modelo de request
+```json
+{
+  "Animal_Codigo": 1,
+  "Fecha_Muerte": "2026-05-02",
+  "Causa": "Enfermedad",
+  "Observacion": "Detalles de la muerte"
+}
+```
+
+### Tablas afectadas
+- `Evento_Ganadero` (tronco)
+- `Evento_Ganadero_Animal` (relación)
+- `Evento_Detalle_Muerte` (historial de muertes)
+- `Animal` (actualiza `Animal_Activo = false`, `Animal_Fecha_Ultimo_Evento`)
+
+### Estado
+✅ Implementado - Backend completo

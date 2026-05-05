@@ -120,3 +120,44 @@ Genera evento de venta con fecha, comprador o destino, valor si aplica, fecha de
 - La salida por venta debe ser definitiva en fase 1.
 - El sistema debe protegerse de ventas duplicadas.
 - La trazabilidad del comprador o destino no debe quedar opcional.
+
+## Estado de implementación
+
+### Endpoints
+- `POST /api/v1/ganaderia/procesos/venta` - Registro individual
+- `POST /api/v1/ganaderia/procesos/venta/lote` - Registro por lote
+
+### Modelo de request (individual)
+```json
+{
+  "Animal_Codigo": 1,
+  "Fecha_Venta": "2026-05-02",
+  "Comprador": "Juan Pérez",
+  "Valor": 150000.00,
+  "Observacion": "Venta de控制"
+}
+```
+
+### Modelo de request (lote)
+```json
+{
+  "Fecha_Venta": "2026-05-02",
+  "Comprador": "Juan Pérez",
+  "Valor_Total": 450000.00,
+  "Observacion": "Venta lote",
+  "Animales": [
+    { "Animal_Codigo": 1, "Valor": 150000.00 },
+    { "Animal_Codigo": 2, "Valor": 150000.00 },
+    { "Animal_Codigo": 3, "Valor": 150000.00 }
+  ]
+}
+```
+
+### Tablas afectadas
+- `Evento_Ganadero` (tronco)
+- `Evento_Ganadero_Animal` (relación)
+- `Evento_Detalle_Venta` (historial de ventas)
+- `Animal` (actualiza `Animal_Activo = false`, `Animal_Fecha_Ultimo_Evento`)
+
+### Estado
+✅ Implementado - Backend completo

@@ -22,6 +22,5 @@ public static class NacimientoMessages
     public const string FechaNacimientoRequerida = "La fecha de nacimiento es obligatoria.";
     public const string FechaNacimientoFutura = "La fecha de nacimiento no puede ser mayor a la fecha actual.";
     public const string CategoriaIncompatibleConSexo = "La categoría indicada no es compatible con el sexo de la cría.";
-    public const string TipoIdentificadorInternoNoDisponible = "No existe el tipo de identificador interno del sistema para este cliente.";
     public const string PesoNacerInvalido = "El peso al nacer debe ser mayor a 0.";
 }

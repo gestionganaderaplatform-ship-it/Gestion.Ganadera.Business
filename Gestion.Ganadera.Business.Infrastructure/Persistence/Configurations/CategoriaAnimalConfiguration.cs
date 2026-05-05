@@ -26,6 +26,11 @@ public sealed class CategoriaAnimalConfiguration : IEntityTypeConfiguration<Cate
         entity.Property(x => x.Categoria_Animal_Sexo_Esperado)
             .HasMaxLength(20);
 
+        entity.HasOne<CategoriaAnimal>()
+            .WithMany()
+            .HasForeignKey(x => x.Categoria_Animal_Siguiente_Codigo)
+            .OnDelete(DeleteBehavior.Restrict);
+
         entity.ConfigureAuditableGanaderia();
     }
 }

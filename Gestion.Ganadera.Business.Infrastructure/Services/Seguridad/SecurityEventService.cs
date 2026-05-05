@@ -23,19 +23,12 @@ namespace Gestion.Ganadera.Business.Infrastructure.Seguridad
 
         public async Task RegistrarAsync(EventoSeguridadViewModel evento)
         {
-            try
-            {
-                var entidad = _mapper.Map<EventoSeguridad>(evento);
-                entidad.Evento_Seguridad_Api_Codigo = _apiInfoProvider.ApiCodigo;
-                entidad.Cliente_Codigo ??= _currentClientProvider.ClientNumericId;
+            var entidad = _mapper.Map<EventoSeguridad>(evento);
+            entidad.Evento_Seguridad_Api_Codigo = _apiInfoProvider.ApiCodigo;
+            entidad.Cliente_Codigo ??= _currentClientProvider.ClientNumericId;
 
-                _context.Seguridad_Eventos.Add(entidad);
-                await _context.SaveChangesAsync();
-            }
-            catch
-            {
-                // Nunca romper el request por seguridad
-            }
+            _context.Seguridad_Eventos.Add(entidad);
+            await _context.SaveChangesAsync();
         }
     }
 }

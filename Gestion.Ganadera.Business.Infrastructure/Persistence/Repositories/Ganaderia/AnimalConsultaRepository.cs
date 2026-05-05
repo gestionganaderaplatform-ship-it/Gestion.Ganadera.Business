@@ -146,6 +146,7 @@ public class AnimalConsultaRepository(AppDbContext context) : IAnimalConsultaRep
                         Animal_Identificador_Principal = principalIdent != null ? principalIdent.Identificador_Animal_Valor : "Sin identificador",
                         Categoria_Animal_Nombre = categoria.Categoria_Animal_Nombre,
                         Potrero_Nombre = potrero.Potrero_Nombre,
+                        Potrero_Codigo = potrero.Potrero_Codigo,
                         Animal_Origen_Ingreso = animal.Animal_Origen_Ingreso,
                         Animal_Fecha_Ingreso_Inicial = animal.Animal_Fecha_Ingreso_Inicial,
                         Animal_Activo = animal.Animal_Activo
@@ -354,6 +355,7 @@ public class AnimalConsultaRepository(AppDbContext context) : IAnimalConsultaRep
                         Animal_Identificador_Principal = principalIdent != null ? principalIdent.Identificador_Animal_Valor : "Sin identificador",
                         Categoria_Animal_Nombre = categoria.Categoria_Animal_Nombre,
                         Potrero_Nombre = potrero.Potrero_Nombre,
+                        Potrero_Codigo = potrero.Potrero_Codigo,
                         Animal_Origen_Ingreso = animal.Animal_Origen_Ingreso,
                         Animal_Fecha_Ingreso_Inicial = animal.Animal_Fecha_Ingreso_Inicial,
                         Animal_Activo = animal.Animal_Activo
@@ -375,6 +377,11 @@ public class AnimalConsultaRepository(AppDbContext context) : IAnimalConsultaRep
         {
             var term = filtro.Potrero_Nombre.Trim().ToLower();
             query = query.Where(x => x.Potrero_Nombre.ToLower().Contains(term));
+        }
+
+        if (filtro.Potrero_Codigo.HasValue)
+        {
+            query = query.Where(x => x.Potrero_Codigo == filtro.Potrero_Codigo.Value);
         }
 
         if (filtro.Animal_Fecha_Ingreso_Inicial.HasValue)

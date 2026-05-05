@@ -22,7 +22,6 @@ public static class CompraMessages
     public const string FechaCompraFutura = "La fecha de compra no puede ser mayor a la fecha actual.";
     public const string OrigenVendedorRequerido = "El origen o vendedor es obligatorio.";
     public const string CategoriaIncompatibleConSexo = "La categoría indicada no es compatible con el sexo del animal.";
-    public const string TipoIdentificadorInternoNoDisponible = "No existe el tipo de identificador interno del sistema para este cliente.";
     public const string LoteSinAnimales = "La compra debe incluir al menos un animal.";
     public const string LoteSuperaMaximo = "La compra no puede incluir más de 100 animales.";
     public const string IdentificadoresRepetidosEnLote = "La compra contiene identificadores repetidos.";

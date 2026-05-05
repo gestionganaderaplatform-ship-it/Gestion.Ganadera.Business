@@ -27,7 +27,8 @@ no abrir el siguiente proceso hasta que el actual tenga backend utilizable y fro
 - [x] Validacion de registro existente
 - [x] Registro existente
 - [x] Compra
-- [ ] Movimiento de potrero
+- [x] Compra
+- [x] Movimiento de potrero (individual + lote)
 
 ### Ajustes recientes ya cerrados
 - [x] Crear identificador interno del sistema en registro existente
@@ -71,20 +72,41 @@ no abrir el siguiente proceso hasta que el actual tenga backend utilizable y fro
 - [x] Impacto en historial
 - [ ] Validacion manual completa con payload real
 
-### Proceso 3. Movimiento de potrero
-- [ ] Definir request y response
-- [ ] Crear validador
-- [ ] Crear detalle del proceso
-- [ ] Implementar transaccion
-- [ ] Actualizar snapshot del animal
-- [ ] Impactar historial
+### Proceso 3. Nacimiento y Muerte
+- [x] Endpoints de registro (Nacimiento/Muerte)
+- [x] Persistencia atomica y detalles del evento
+- [x] Actualizacion automatica de snapshot (Nacimiento: crea animal / Muerte: inactiva)
+- [x] Impacto en historial y trazabilidad
+
+### Proceso 4. Movimiento de potrero y Traslado
+- [x] Definir request y response
+- [x] Crear validador
+- [x] Crear detalle del proceso
+- [x] Implementar transaccion
+- [x] Actualizar snapshot del animal
+- [x] Impactar historial
+- [x] Endpoint lote (Movimiento)
+- [x] Endpoint Traslado entre fincas
+
+## Procesos Fase 2 (Backend ✅)
+
+### Tratamiento, Palpación y Destete
+- [x] Maestros y catálogos operativos
+- [x] Endpoints de validación y registro
+- [x] Persistencia de detalles técnicos
+- [x] Actualización de estados derivados en ficha del animal
+
+### Descarte
+- [x] Maestros de motivos de descarte
+- [x] Endpoint de registro
+- [x] Inactivación de animal y registro de salida
 
 ## Siguiente bloque recomendado
 
-1. Probar de punta a punta registro existente y compra con payload real
+1. Probar de punta a punta procesos de Fase 1 con payload real en Web
 2. Cerrar captura y edicion de marcas ganaderas del cliente en la experiencia
-3. Validar si el consecutivo por finca requiere secuencia dedicada
-4. Cerrar movimiento de potrero en backend
+3. **Cerrar Backend: Cambio de categoría** (Único pendiente de lógica core)
+4. Iniciar conexión de servicios de Fase 2 en Frontend (Web)
 
 ## Pendiente para etapa final
 

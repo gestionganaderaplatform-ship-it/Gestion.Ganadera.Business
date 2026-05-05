@@ -125,4 +125,72 @@ internal static class GanaderiaCatalogosBase
             }
         ];
     }
+
+    public static IReadOnlyList<CausaMuerte> ObtenerCausasMuerte()
+    {
+        return
+        [
+            new CausaMuerte { Causa_Muerte_Nombre = "Enfermedad", Causa_Muerte_Activa = true },
+            new CausaMuerte { Causa_Muerte_Nombre = "Accidente", Causa_Muerte_Activa = true },
+            new CausaMuerte { Causa_Muerte_Nombre = "Vejez", Causa_Muerte_Activa = true },
+            new CausaMuerte { Causa_Muerte_Nombre = "Sacrificio Sanitario", Causa_Muerte_Activa = true },
+            new CausaMuerte { Causa_Muerte_Nombre = "Desconocida", Causa_Muerte_Activa = true }
+        ];
+    }
+
+    public static IReadOnlyList<VacunaEnfermedad> ObtenerVacunasEnfermedades()
+    {
+        return
+        [
+            new VacunaEnfermedad { Vacuna_Enfermedad_Nombre = "Fiebre aftosa" },
+            new VacunaEnfermedad { Vacuna_Enfermedad_Nombre = "Brucelosis" },
+            new VacunaEnfermedad { Vacuna_Enfermedad_Nombre = "Rabia" }
+        ];
+    }
+
+    public static IReadOnlyList<TratamientoTipo> ObtenerTratamientoTipos()
+    {
+        return
+        [
+            new TratamientoTipo { Tratamiento_Tipo_Nombre = "Antibiótico" },
+            new TratamientoTipo { Tratamiento_Tipo_Nombre = "Desparasitante" },
+            new TratamientoTipo { Tratamiento_Tipo_Nombre = "Vitamina/Suplemento" },
+            new TratamientoTipo { Tratamiento_Tipo_Nombre = "Hormonal" },
+            new TratamientoTipo { Tratamiento_Tipo_Nombre = "Vacuna" }
+        ];
+    }
+
+    public static IReadOnlyList<TratamientoProducto> ObtenerTratamientoProductos()
+    {
+        return
+        [
+            new TratamientoProducto { Tratamiento_Producto_Nombre = "Ivermectina" },
+            new TratamientoProducto { Tratamiento_Producto_Nombre = "Oxitetraciclina" },
+            new TratamientoProducto { Tratamiento_Producto_Nombre = "Complejo B" }
+        ];
+    }
+
+    public static IReadOnlyList<PalpacionResultado> ObtenerPalpacionResultados()
+    {
+        return
+        [
+            new PalpacionResultado { Palpacion_Resultado_Nombre = "Preñada" },
+            new PalpacionResultado { Palpacion_Resultado_Nombre = "Vacía" },
+            new PalpacionResultado { Palpacion_Resultado_Nombre = "En Duda" },
+            new PalpacionResultado { Palpacion_Resultado_Nombre = "Anestro" }
+        ];
+    }
+
+    public static IReadOnlyList<DescarteMotivo> ObtenerDescarteMotivos()
+    {
+        return
+        [
+            new DescarteMotivo { Descarte_Motivo_Nombre = "Edad" },
+            new DescarteMotivo { Descarte_Motivo_Nombre = "Baja Fertilidad" },
+            new DescarteMotivo { Descarte_Motivo_Nombre = "Problemas de Salud" },
+            new DescarteMotivo { Descarte_Motivo_Nombre = "Temperamento / Agresividad" },
+            new DescarteMotivo { Descarte_Motivo_Nombre = "Baja Productividad" },
+            new DescarteMotivo { Descarte_Motivo_Nombre = "Defectos Físicos" }
+        ];
+    }
 }

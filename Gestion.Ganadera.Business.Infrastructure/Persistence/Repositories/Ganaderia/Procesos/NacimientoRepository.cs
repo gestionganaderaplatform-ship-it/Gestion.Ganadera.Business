@@ -1,16 +1,12 @@
-using FluentValidation;
-using FluentValidation.Results;
+using Gestion.Ganadera.Business.Application.Features.Ganaderia.Identificadores.Interfaces;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.Nacimiento.Interfaces;
-using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.Nacimiento.Messages;
 using Gestion.Ganadera.Business.Domain.Features.Ganaderia;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Repositories.Ganaderia.Procesos;
 
-public class NacimientoRepository(AppDbContext context) : INacimientoRepository
+public class NacimientoRepository(AppDbContext context, IIdentificadorService identificadorService) : INacimientoRepository
 {
-    private const string TipoIdentificadorInternoSistema = "INTERNO_SISTEMA";
-
     public async Task<bool> RegistrarAtomicoAsync(
         Animal cria,
         IdentificadorAnimal identificador,
@@ -25,53 +21,45 @@ public class NacimientoRepository(AppDbContext context) : INacimientoRepository
         return await strategy.ExecuteAsync(async () =>
         {
             await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
-            try
+            await context.Animales.AddAsync(cria, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+
+            var tipoIdentificadorInternoCodigo = await identificadorService.ObtenerTipoIdentificadorInternoCodigoAsync(
+                cria.Finca_Codigo,
+                cancellationToken);
+
+            var identificadorInterno = new IdentificadorAnimal
             {
-                await context.Animales.AddAsync(cria, cancellationToken);
-                await context.SaveChangesAsync(cancellationToken);
+                Animal_Codigo = cria.Animal_Codigo,
+                Tipo_Identificador_Codigo = tipoIdentificadorInternoCodigo,
+                Identificador_Animal_Valor = identificadorService.ConstruirIdentificadorInterno(cria.Animal_Codigo),
+                Identificador_Animal_Es_Principal = false,
+                Identificador_Animal_Activo = true
+            };
 
-                var tipoIdentificadorInternoCodigo = await ObtenerTipoIdentificadorInternoCodigoAsync(
-                    cria.Finca_Codigo,
-                    cancellationToken);
+            identificador.Animal_Codigo = cria.Animal_Codigo;
+            await context.IdentificadoresAnimal.AddRangeAsync(
+                [identificador, identificadorInterno],
+                cancellationToken);
 
-                var identificadorInterno = new IdentificadorAnimal
-                {
-                    Animal_Codigo = cria.Animal_Codigo,
-                    Tipo_Identificador_Codigo = tipoIdentificadorInternoCodigo,
-                    Identificador_Animal_Valor = ConstruirIdentificadorInterno(cria.Animal_Codigo),
-                    Identificador_Animal_Es_Principal = false,
-                    Identificador_Animal_Activo = true
-                };
+            await context.EventosGanaderos.AddAsync(evento, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
 
-                identificador.Animal_Codigo = cria.Animal_Codigo;
-                await context.IdentificadoresAnimal.AddRangeAsync(
-                    [identificador, identificadorInterno],
-                    cancellationToken);
+            eventoAnimal.Evento_Ganadero_Codigo = evento.Evento_Ganadero_Codigo;
+            eventoAnimal.Animal_Codigo = cria.Animal_Codigo;
+            await context.EventosGanaderosAnimal.AddAsync(eventoAnimal, cancellationToken);
 
-                await context.EventosGanaderos.AddAsync(evento, cancellationToken);
-                await context.SaveChangesAsync(cancellationToken);
+            relacion.Animal_Codigo_Cria = cria.Animal_Codigo;
+            await context.AnimalesRelacionesFamiliares.AddAsync(relacion, cancellationToken);
 
-                eventoAnimal.Evento_Ganadero_Codigo = evento.Evento_Ganadero_Codigo;
-                eventoAnimal.Animal_Codigo = cria.Animal_Codigo;
-                await context.EventosGanaderosAnimal.AddAsync(eventoAnimal, cancellationToken);
+            detalle.Evento_Ganadero_Codigo = evento.Evento_Ganadero_Codigo;
+            detalle.Animal_Codigo_Cria = cria.Animal_Codigo;
+            await context.EventosDetalleNacimiento.AddAsync(detalle, cancellationToken);
 
-                relacion.Animal_Codigo_Cria = cria.Animal_Codigo;
-                await context.AnimalesRelacionesFamiliares.AddAsync(relacion, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
 
-                detalle.Evento_Ganadero_Codigo = evento.Evento_Ganadero_Codigo;
-                detalle.Animal_Codigo_Cria = cria.Animal_Codigo;
-                await context.EventosDetalleNacimiento.AddAsync(detalle, cancellationToken);
-
-                await context.SaveChangesAsync(cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
-
-                return true;
-            }
-            catch (Exception)
-            {
-                await transaction.RollbackAsync(cancellationToken);
-                throw;
-            }
+            return true;
         });
     }
 
@@ -112,45 +100,6 @@ public class NacimientoRepository(AppDbContext context) : INacimientoRepository
     public async Task<int> ObtenerSiguienteConsecutivoAsync(
         long fincaCodigo,
         CancellationToken cancellationToken = default)
-    {
-        var totalAnimales = await context.Animales
-            .AsNoTracking()
-            .CountAsync(item => item.Finca_Codigo == fincaCodigo, cancellationToken);
-
-        return totalAnimales + 1;
-    }
-
-    private async Task<long> ObtenerTipoIdentificadorInternoCodigoAsync(
-        long fincaCodigo,
-        CancellationToken cancellationToken)
-    {
-        var clienteCodigo = await context.Fincas
-            .Where(f => f.Finca_Codigo == fincaCodigo)
-            .Select(f => f.Cliente_Codigo)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        var tipoIdentificadorInternoCodigo = await context.TiposIdentificador
-            .IgnoreQueryFilters()
-            .Where(item =>
-                item.Cliente_Codigo == clienteCodigo &&
-                item.Tipo_Identificador_Codigo_Interno == TipoIdentificadorInternoSistema &&
-                item.Tipo_Identificador_Activo)
-            .Select(item => (long?)item.Tipo_Identificador_Codigo)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (!tipoIdentificadorInternoCodigo.HasValue)
-        {
-            throw new ValidationException(
-            [
-                new ValidationFailure(
-                    nameof(IdentificadorAnimal.Tipo_Identificador_Codigo),
-                    NacimientoMessages.TipoIdentificadorInternoNoDisponible)
-            ]);
-        }
-
-        return tipoIdentificadorInternoCodigo.Value;
-    }
-
-    private static string ConstruirIdentificadorInterno(long animalCodigo)
-        => $"INT-{animalCodigo:D10}";
+        => await identificadorService.ObtenerSiguienteConsecutivoAsync(fincaCodigo, cancellationToken);
 }
+

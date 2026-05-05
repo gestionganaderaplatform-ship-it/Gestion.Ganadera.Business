@@ -161,3 +161,8 @@ Puede alimentar:
 - producto o tratamiento debe ser catálogo controlado
 - no conviene bloquear por falta de datos complementarios en fase 2
 - el veterinario debe poder figurar como aplicador aunque no sea el usuario que registra
+
+## 21. Maestros requeridos
+- **TratamientoTipo**: Catálogo de categorías de tratamientos (Ej: Antibiótico, Analgésico, Desparasitante, Vitamínico, Curación externa).
+- **TratamientoProducto**: Catálogo de fármacos o insumos sanitarios, asociados obligatoriamente a un *TratamientoTipo*.
+- **Diagnóstico/Enfermedad (Opcional)**: Catálogo de afecciones comunes para estandarizar el motivo del tratamiento.

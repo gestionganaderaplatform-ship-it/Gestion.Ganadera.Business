@@ -1,16 +1,13 @@
-using FluentValidation;
-using FluentValidation.Results;
+using Gestion.Ganadera.Business.Application.Features.Ganaderia.Identificadores.Models;
+using Gestion.Ganadera.Business.Application.Features.Ganaderia.Identificadores.Interfaces;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.RegistroExistente.Interfaces;
-using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.RegistroExistente.Messages;
 using Gestion.Ganadera.Business.Domain.Features.Ganaderia;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Repositories.Ganaderia.Procesos;
 
-public class RegistroExistenteRepository(AppDbContext context) : IRegistroExistenteRepository
+public class RegistroExistenteRepository(AppDbContext context, IIdentificadorService identificadorService) : IRegistroExistenteRepository
 {
-    private const string TipoIdentificadorInternoSistema = "INTERNO_SISTEMA";
-
     public async Task<bool> RegistrarAtomicoAsync(
         Animal animal,
         IdentificadorAnimal identificador,
@@ -29,7 +26,7 @@ public class RegistroExistenteRepository(AppDbContext context) : IRegistroExiste
                 await context.Animales.AddAsync(animal, cancellationToken);
                 await context.SaveChangesAsync(cancellationToken);
 
-                var tipoIdentificadorInternoCodigo = await ObtenerTipoIdentificadorInternoCodigoAsync(
+                var tipoIdentificadorInternoCodigo = await identificadorService.ObtenerTipoIdentificadorInternoCodigoAsync(
                     animal.Finca_Codigo,
                     cancellationToken);
 
@@ -37,7 +34,7 @@ public class RegistroExistenteRepository(AppDbContext context) : IRegistroExiste
                 {
                     Animal_Codigo = animal.Animal_Codigo,
                     Tipo_Identificador_Codigo = tipoIdentificadorInternoCodigo,
-                    Identificador_Animal_Valor = ConstruirIdentificadorInterno(animal.Animal_Codigo),
+                    Identificador_Animal_Valor = identificadorService.ConstruirIdentificadorInterno(animal.Animal_Codigo),
                     Identificador_Animal_Es_Principal = false,
                     Identificador_Animal_Activo = true
                 };
@@ -90,7 +87,7 @@ public class RegistroExistenteRepository(AppDbContext context) : IRegistroExiste
 
                     if (!tipoIdentificadorInternoCache.TryGetValue(item.Animal.Finca_Codigo, out var tipoIdentificadorInternoCodigo))
                     {
-                        tipoIdentificadorInternoCodigo = await ObtenerTipoIdentificadorInternoCodigoAsync(
+                        tipoIdentificadorInternoCodigo = await identificadorService.ObtenerTipoIdentificadorInternoCodigoAsync(
                             item.Animal.Finca_Codigo,
                             cancellationToken);
                         tipoIdentificadorInternoCache[item.Animal.Finca_Codigo] = tipoIdentificadorInternoCodigo;
@@ -100,7 +97,7 @@ public class RegistroExistenteRepository(AppDbContext context) : IRegistroExiste
                     {
                         Animal_Codigo = item.Animal.Animal_Codigo,
                         Tipo_Identificador_Codigo = tipoIdentificadorInternoCodigo,
-                        Identificador_Animal_Valor = ConstruirIdentificadorInterno(item.Animal.Animal_Codigo),
+                        Identificador_Animal_Valor = identificadorService.ConstruirIdentificadorInterno(item.Animal.Animal_Codigo),
                         Identificador_Animal_Es_Principal = false,
                         Identificador_Animal_Activo = true
                     };
@@ -134,78 +131,23 @@ public class RegistroExistenteRepository(AppDbContext context) : IRegistroExiste
         });
     }
 
-    public async Task<int> ObtenerSiguienteConsecutivoAsync(long fibraCodigo, CancellationToken cancellationToken = default)
-    {
-        var totalAnimales = await context.Animales
-            .AsNoTracking()
-            .CountAsync(item => item.Finca_Codigo == fibraCodigo, cancellationToken);
-
-        return totalAnimales + 1;
-    }
+    public async Task<int> ObtenerSiguienteConsecutivoAsync(long fincaCodigo, CancellationToken cancellationToken = default)
+        => await identificadorService.ObtenerSiguienteConsecutivoAsync(fincaCodigo, cancellationToken);
 
     public async Task<IReadOnlyList<ExistenciaIdentificador>> ExistentesIdentificadoresAsync(
-        long fibraCodigo,
+        long fincaCodigo,
         IEnumerable<string> identificadores,
         CancellationToken cancellationToken = default)
     {
-        var listaIdentificadores = identificadores.ToList();
-        if (listaIdentificadores.Count == 0)
-        {
-            return [];
-        }
+        var resultado = await identificadorService.VerificarExistenciaIdentificadoresAsync(fincaCodigo, identificadores, cancellationToken);
 
-        var existentes = await context.IdentificadoresAnimal
-            .Join(context.Animales,
-                i => i.Animal_Codigo,
-                a => a.Animal_Codigo,
-                (i, a) => new { i, a })
-            .Where(x =>
-                x.a.Finca_Codigo == fibraCodigo &&
-                x.i.Identificador_Animal_Activo &&
-                listaIdentificadores.Contains(x.i.Identificador_Animal_Valor))
-            .Select(x => x.i.Identificador_Animal_Valor)
-            .ToListAsync(cancellationToken);
-
-        var existentesSet = existentes.ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-        return listaIdentificadores
-            .Select(id => new ExistenciaIdentificador(id, existentesSet.Contains(id)))
+        return resultado
+            .Select(x => new ExistenciaIdentificador(x.Identificador, x.Existe))
             .ToList();
     }
 
-    private async Task<long> ObtenerTipoIdentificadorInternoCodigoAsync(
-        long fibraCodigo,
-        CancellationToken cancellationToken)
-    {
-        var clienteCodigo = await context.Fincas
-            .Where(f => f.Finca_Codigo == fibraCodigo)
-            .Select(f => f.Cliente_Codigo)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        var tipoIdentificadorInternoCodigo = await context.TiposIdentificador
-            .IgnoreQueryFilters()
-            .Where(item =>
-                item.Cliente_Codigo == clienteCodigo &&
-                item.Tipo_Identificador_Codigo_Interno == TipoIdentificadorInternoSistema &&
-                item.Tipo_Identificador_Activo)
-            .Select(item => (long?)item.Tipo_Identificador_Codigo)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (!tipoIdentificadorInternoCodigo.HasValue)
-        {
-            throw new ValidationException(
-            [
-                new ValidationFailure(
-                    nameof(IdentificadorAnimal.Tipo_Identificador_Codigo),
-                    ValidarRegistroExistenteMessages.TipoIdentificadorInternoNoDisponible)
-            ]);
-        }
-
-        return tipoIdentificadorInternoCodigo.Value;
-    }
-
     public async Task<bool> ExisteIdentificadorActivoEnFincaAsync(
-        long fibraCodigo,
+        long fincaCodigo,
         string identificadorPrincipal,
         CancellationToken cancellationToken = default)
     {
@@ -219,20 +161,18 @@ public class RegistroExistenteRepository(AppDbContext context) : IRegistroExiste
             .AnyAsync(
                 item => item.identificador.Identificador_Animal_Valor == identificadorPrincipal &&
                         item.identificador.Identificador_Animal_Activo &&
-                        item.animal.Finca_Codigo == fibraCodigo,
+                        item.animal.Finca_Codigo == fincaCodigo,
                 cancellationToken);
     }
 
-    public async Task<bool> FincaPoseePotreroAsync(long fibraCodigo, long potreroCodigo, CancellationToken cancellationToken = default)
+    public async Task<bool> FincaPoseePotreroAsync(long fincaCodigo, long potreroCodigo, CancellationToken cancellationToken = default)
     {
         return await context.Potreros
             .AnyAsync(
-                p => p.Finca_Codigo == fibraCodigo &&
+                p => p.Finca_Codigo == fincaCodigo &&
                      p.Potrero_Codigo == potreroCodigo &&
                      p.Potrero_Activo,
                 cancellationToken);
     }
-
-    private static string ConstruirIdentificadorInterno(long animalCodigo)
-        => $"INT-{animalCodigo:D10}";
 }
+

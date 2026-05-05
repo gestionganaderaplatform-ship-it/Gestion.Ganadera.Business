@@ -4,6 +4,7 @@ using Gestion.Ganadera.Business.API.ErrorHandling;
 using Gestion.Ganadera.Business.API.Requests.Helpers;
 using Gestion.Ganadera.Business.API.Security.Permissions;
 using Gestion.Ganadera.Business.API.Security.Planes;
+using Gestion.Ganadera.Business.Application.Features.Ganaderia.Identificadores.Interfaces;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.Nacimiento.Interfaces;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.Nacimiento.Messages;
 using Gestion.Ganadera.Business.Application.Features.Ganaderia.Procesos.Nacimiento.Models;
@@ -17,7 +18,9 @@ namespace Gestion.Ganadera.Business.API.Controllers.Ganaderia.Procesos;
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/ganaderia/procesos/nacimiento")]
 [ControllerPermissions(ControllerPermission.Create | ControllerPermission.GetPaged)]
-public class NacimientoController(INacimientoService service) : ControllerBase
+public class NacimientoController(
+    INacimientoService service,
+    IIdentificadorService identificadorService) : ControllerBase
 {
     [HttpGet("siguiente-consecutivo")]
     [RequirePermission(ControllerPermission.GetPaged)]
@@ -32,10 +35,11 @@ public class NacimientoController(INacimientoService service) : ControllerBase
                 detail: NacimientoMessages.FincaCodigoInvalido);
         }
 
-        var consecutivo = await service.ObtenerSiguienteConsecutivoAsync(fincaCodigo, cancellationToken);
+        var consecutivo = await identificadorService.ObtenerSiguienteConsecutivoAsync(fincaCodigo, cancellationToken);
 
         return Ok(new { Siguiente_Consecutivo = consecutivo });
     }
+
 
     [HttpPost("validar")]
     [RequirePermission(ControllerPermission.Create)]

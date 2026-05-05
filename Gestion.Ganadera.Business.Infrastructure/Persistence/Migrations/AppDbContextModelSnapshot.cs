@@ -33,10 +33,22 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                     b.Property<bool>("Animal_Activo")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Animal_Estado_Reproductivo_Actual")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Animal_Fecha_Descarte")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("Animal_Fecha_Ingreso_Inicial")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Animal_Fecha_Muerte")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Animal_Fecha_Nacimiento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Animal_Fecha_Peso")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("Animal_Fecha_Registro_Ingreso")
@@ -47,23 +59,50 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("Animal_Fecha_Ultimo_Evento")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Animal_Fecha_Venta")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Animal_Origen_Ingreso")
                         .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
+
+                    b.Property<decimal?>("Animal_Peso")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Animal_Sexo")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<DateTime?>("Animal_Ultima_Palpacion_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Animal_Ultimo_Evento_Sanitario_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Animal_Ultimo_Evento_Sanitario_Producto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Animal_Ultimo_Evento_Sanitario_Tipo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Animal_Ultimo_Resultado_Reproductivo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("Categoria_Animal_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Causa_Muerte_Codigo")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("Cliente_Codigo")
                         .HasColumnType("bigint");
 
                     b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Descarte_Motivo_Codigo")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("Fecha_Creado")
@@ -151,6 +190,66 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                     b.ToTable("Animal_Relacion_Familiar", "Ganaderia");
                 });
 
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CambioCategoriaSugerido", b =>
+                {
+                    b.Property<long>("Cambio_Categoria_Sugerido_Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Cambio_Categoria_Sugerido_Codigo"));
+
+                    b.Property<long>("Animal_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Categoria_Actual_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Categoria_Sugerida_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Fecha_Sugerencia")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Sugerencia_Estado")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Sugerencia_Motivo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Cambio_Categoria_Sugerido_Codigo");
+
+                    b.HasIndex("Animal_Codigo");
+
+                    b.HasIndex("Categoria_Actual_Codigo");
+
+                    b.HasIndex("Categoria_Sugerida_Codigo");
+
+                    b.HasIndex("Cliente_Codigo", "Sugerencia_Estado");
+
+                    b.ToTable("Cambio_Categoria_Sugerido", "Ganaderia");
+                });
+
             modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CategoriaAnimal", b =>
                 {
                     b.Property<long>("Categoria_Animal_Codigo")
@@ -161,6 +260,9 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
 
                     b.Property<bool>("Categoria_Animal_Activa")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("Categoria_Animal_Meses_Sugeridos")
+                        .HasColumnType("int");
 
                     b.Property<string>("Categoria_Animal_Nombre")
                         .IsRequired()
@@ -173,6 +275,9 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                     b.Property<string>("Categoria_Animal_Sexo_Esperado")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<long?>("Categoria_Animal_Siguiente_Codigo")
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("Cliente_Codigo")
                         .HasColumnType("bigint");
@@ -193,11 +298,147 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Categoria_Animal_Codigo");
 
+                    b.HasIndex("Categoria_Animal_Siguiente_Codigo");
+
                     b.HasIndex("Cliente_Codigo", "Categoria_Animal_Nombre")
                         .IsUnique()
                         .HasFilter("[Cliente_Codigo] IS NOT NULL");
 
                     b.ToTable("Categoria_Animal", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CausaMuerte", b =>
+                {
+                    b.Property<long>("Causa_Muerte_Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Causa_Muerte_Codigo"));
+
+                    b.Property<bool>("Causa_Muerte_Activa")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Causa_Muerte_Descripcion")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Causa_Muerte_Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("Causa_Muerte_Orden")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Causa_Muerte_Codigo");
+
+                    b.ToTable("Causa_Muerte", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.DescarteMotivo", b =>
+                {
+                    b.Property<long>("Descarte_Motivo_Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Descarte_Motivo_Codigo"));
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("Descarte_Motivo_Activo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Descarte_Motivo_Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Descarte_Motivo_Codigo");
+
+                    b.ToTable("Descarte_Motivo", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleCambioCategoria", b =>
+                {
+                    b.Property<long>("Evento_Ganadero_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Categoria_Anterior_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Categoria_Nueva_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Evento_Detalle_Cambio_Categoria_Observacion")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal?>("Evento_Detalle_Cambio_Categoria_Peso_Al_Cambio")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Evento_Ganadero_Codigo");
+
+                    b.HasIndex("Categoria_Anterior_Codigo");
+
+                    b.HasIndex("Categoria_Nueva_Codigo");
+
+                    b.ToTable("Evento_Detalle_Cambio_Categoria", "Ganaderia");
                 });
 
             modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleCompra", b =>
@@ -273,6 +514,176 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                     b.ToTable("Evento_Detalle_Compra", "Ganaderia");
                 });
 
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleDescarte", b =>
+                {
+                    b.Property<long>("Evento_Ganadero_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Descarte_Motivo_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Evento_Detalle_Descarte_Destino")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("Evento_Detalle_Descarte_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Evento_Detalle_Descarte_Observacion")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<decimal?>("Evento_Detalle_Descarte_Valor")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Evento_Ganadero_Codigo");
+
+                    b.HasIndex("Descarte_Motivo_Codigo");
+
+                    b.ToTable("Evento_Detalle_Descarte", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleDestete", b =>
+                {
+                    b.Property<long>("Evento_Ganadero_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Animal_Codigo_Madre")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Evento_Detalle_Destete_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Evento_Detalle_Destete_Observacion")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Evento_Detalle_Destete_Responsable")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Potrero_Destino_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Evento_Ganadero_Codigo");
+
+                    b.HasIndex("Animal_Codigo_Madre");
+
+                    b.HasIndex("Potrero_Destino_Codigo");
+
+                    b.ToTable("Evento_Detalle_Destete", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleMovimientoPotrero", b =>
+                {
+                    b.Property<long>("Evento_Ganadero_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Evento_Detalle_Movimiento_Potrero_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Potrero_Codigo_Destino")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Potrero_Codigo_Origen")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Evento_Ganadero_Codigo");
+
+                    b.ToTable("Evento_Detalle_Movimiento_Potrero", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleMuerte", b =>
+                {
+                    b.Property<long>("Evento_Ganadero_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Causa_Muerte_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Evento_Detalle_Muerte_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Evento_Detalle_Muerte_Observacion")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Evento_Ganadero_Codigo");
+
+                    b.HasIndex("Causa_Muerte_Codigo");
+
+                    b.ToTable("Evento_Detalle_Muerte", "Ganaderia");
+                });
+
             modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleNacimiento", b =>
                 {
                     b.Property<long>("Evento_Ganadero_Codigo")
@@ -346,6 +757,91 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                     b.ToTable("Evento_Detalle_Nacimiento", "Ganaderia");
                 });
 
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetallePalpacion", b =>
+                {
+                    b.Property<long>("Evento_Ganadero_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Evento_Detalle_Palpacion_Dato_Complementario")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("Evento_Detalle_Palpacion_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Evento_Detalle_Palpacion_Observacion")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Evento_Detalle_Palpacion_Responsable")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Palpacion_Resultado_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Evento_Ganadero_Codigo");
+
+                    b.HasIndex("Palpacion_Resultado_Codigo");
+
+                    b.ToTable("Evento_Detalle_Palpacion", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetallePesaje", b =>
+                {
+                    b.Property<long>("Evento_Ganadero_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Evento_Detalle_Pesaje_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Evento_Detalle_Pesaje_Observacion")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal>("Evento_Detalle_Peso")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Evento_Ganadero_Codigo");
+
+                    b.ToTable("Evento_Detalle_Pesaje", "Ganaderia");
+                });
+
             modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleRegistroExistente", b =>
                 {
                     b.Property<long>("Evento_Ganadero_Codigo")
@@ -407,6 +903,212 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                     b.HasIndex("Tipo_Identificador_Codigo");
 
                     b.ToTable("Evento_Detalle_Registro_Existente", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleTrasladoFinca", b =>
+                {
+                    b.Property<long>("Evento_Ganadero_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Evento_Detalle_Traslado_Finca_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Evento_Detalle_Traslado_Finca_Observacion")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("Finca_Codigo_Destino")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Finca_Codigo_Origen")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Potrero_Codigo_Destino")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Evento_Ganadero_Codigo");
+
+                    b.ToTable("Evento_Detalle_Traslado_Finca", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleTratamientoSanitario", b =>
+                {
+                    b.Property<long>("Evento_Ganadero_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Evento_Detalle_Tratamiento_Aplicador")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<decimal?>("Evento_Detalle_Tratamiento_Dosis")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Evento_Detalle_Tratamiento_Duracion")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("Evento_Detalle_Tratamiento_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Evento_Detalle_Tratamiento_Indicacion")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Evento_Detalle_Tratamiento_Observacion")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Tratamiento_Producto_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Evento_Ganadero_Codigo");
+
+                    b.HasIndex("Tratamiento_Producto_Codigo");
+
+                    b.ToTable("Evento_Detalle_Tratamiento_Sanitario", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleVacunacion", b =>
+                {
+                    b.Property<long>("Evento_Ganadero_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Evento_Detalle_Vacunacion_Ciclo")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Evento_Detalle_Vacunacion_Dosis")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<long?>("Evento_Detalle_Vacunacion_Enfermedad_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Evento_Detalle_Vacunacion_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Evento_Detalle_Vacunacion_Lote")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Evento_Detalle_Vacunacion_Observacion")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Evento_Detalle_Vacunacion_Soporte_Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Evento_Detalle_Vacunacion_Vacuna_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Evento_Detalle_Vacunacion_Vacunador")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Evento_Ganadero_Codigo");
+
+                    b.HasIndex("Evento_Detalle_Vacunacion_Enfermedad_Codigo");
+
+                    b.HasIndex("Evento_Detalle_Vacunacion_Vacuna_Codigo");
+
+                    b.ToTable("Evento_Detalle_Vacunacion", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleVenta", b =>
+                {
+                    b.Property<long>("Evento_Ganadero_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Evento_Detalle_Venta_Comprador")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("Evento_Detalle_Venta_Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Evento_Detalle_Venta_Observacion")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal?>("Evento_Detalle_Venta_Valor")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Evento_Ganadero_Codigo");
+
+                    b.ToTable("Evento_Detalle_Venta", "Ganaderia");
                 });
 
             modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", b =>
@@ -636,6 +1338,46 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                     b.ToTable("Identificador_Animal", "Ganaderia");
                 });
 
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.PalpacionResultado", b =>
+                {
+                    b.Property<long>("Palpacion_Resultado_Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Palpacion_Resultado_Codigo"));
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("Palpacion_Resultado_Activo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Palpacion_Resultado_Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Palpacion_Resultado_Codigo");
+
+                    b.ToTable("Palpacion_Resultado", "Ganaderia");
+                });
+
             modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.Potrero", b =>
                 {
                     b.Property<long>("Potrero_Codigo")
@@ -784,6 +1526,180 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                         .HasFilter("[Cliente_Codigo] IS NOT NULL");
 
                     b.ToTable("Tipo_Identificador", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.TratamientoProducto", b =>
+                {
+                    b.Property<long>("Tratamiento_Producto_Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Tratamiento_Producto_Codigo"));
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("Tratamiento_Producto_Activo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Tratamiento_Producto_Nombre")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<long>("Tratamiento_Tipo_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Tratamiento_Producto_Codigo");
+
+                    b.HasIndex("Tratamiento_Tipo_Codigo");
+
+                    b.ToTable("Tratamiento_Producto", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.TratamientoTipo", b =>
+                {
+                    b.Property<long>("Tratamiento_Tipo_Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Tratamiento_Tipo_Codigo"));
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("Tratamiento_Tipo_Activa")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Tratamiento_Tipo_Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Tratamiento_Tipo_Codigo");
+
+                    b.ToTable("Tratamiento_Tipo", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.Vacuna", b =>
+                {
+                    b.Property<long>("Vacuna_Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Vacuna_Codigo"));
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("Vacuna_Activa")
+                        .HasColumnType("bit");
+
+                    b.Property<long?>("Vacuna_Enfermedad_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Vacuna_Nombre")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.HasKey("Vacuna_Codigo");
+
+                    b.HasIndex("Vacuna_Enfermedad_Codigo");
+
+                    b.HasIndex("Cliente_Codigo", "Vacuna_Nombre")
+                        .IsUnique()
+                        .HasFilter("[Cliente_Codigo] IS NOT NULL");
+
+                    b.ToTable("Vacuna", "Ganaderia");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.VacunaEnfermedad", b =>
+                {
+                    b.Property<long>("Vacuna_Enfermedad_Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Vacuna_Enfermedad_Codigo"));
+
+                    b.Property<long?>("Cliente_Codigo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Creado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Fecha_Creado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<DateTime?>("Fecha_Modificado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modificado_Por")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("Vacuna_Enfermedad_Activa")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Vacuna_Enfermedad_Nombre")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.HasKey("Vacuna_Enfermedad_Codigo");
+
+                    b.HasIndex("Cliente_Codigo", "Vacuna_Enfermedad_Nombre")
+                        .IsUnique()
+                        .HasFilter("[Cliente_Codigo] IS NOT NULL");
+
+                    b.ToTable("Vacuna_Enfermedad", "Ganaderia");
                 });
 
             modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Navegacion.MenuNavegacion", b =>
@@ -1110,6 +2026,68 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CambioCategoriaSugerido", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.Animal", "Animal")
+                        .WithMany()
+                        .HasForeignKey("Animal_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CategoriaAnimal", "CategoriaActual")
+                        .WithMany()
+                        .HasForeignKey("Categoria_Actual_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CategoriaAnimal", "CategoriaSugerida")
+                        .WithMany()
+                        .HasForeignKey("Categoria_Sugerida_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Animal");
+
+                    b.Navigation("CategoriaActual");
+
+                    b.Navigation("CategoriaSugerida");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CategoriaAnimal", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CategoriaAnimal", null)
+                        .WithMany()
+                        .HasForeignKey("Categoria_Animal_Siguiente_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleCambioCategoria", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CategoriaAnimal", "CategoriaAnterior")
+                        .WithMany()
+                        .HasForeignKey("Categoria_Anterior_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CategoriaAnimal", "CategoriaNueva")
+                        .WithMany()
+                        .HasForeignKey("Categoria_Nueva_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", "EventoGanadero")
+                        .WithOne()
+                        .HasForeignKey("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleCambioCategoria", "Evento_Ganadero_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CategoriaAnterior");
+
+                    b.Navigation("CategoriaNueva");
+
+                    b.Navigation("EventoGanadero");
+                });
+
             modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleCompra", b =>
                 {
                     b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CategoriaAnimal", null)
@@ -1139,6 +2117,71 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                     b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.TipoIdentificador", null)
                         .WithMany()
                         .HasForeignKey("Tipo_Identificador_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleDescarte", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.DescarteMotivo", "Descarte_Motivo")
+                        .WithMany()
+                        .HasForeignKey("Descarte_Motivo_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", "Evento_Ganadero")
+                        .WithOne()
+                        .HasForeignKey("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleDescarte", "Evento_Ganadero_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Descarte_Motivo");
+
+                    b.Navigation("Evento_Ganadero");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleDestete", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.Animal", null)
+                        .WithMany()
+                        .HasForeignKey("Animal_Codigo_Madre")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", "Evento_Ganadero")
+                        .WithOne()
+                        .HasForeignKey("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleDestete", "Evento_Ganadero_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.Potrero", null)
+                        .WithMany()
+                        .HasForeignKey("Potrero_Destino_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Evento_Ganadero");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleMovimientoPotrero", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", null)
+                        .WithMany()
+                        .HasForeignKey("Evento_Ganadero_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleMuerte", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CausaMuerte", null)
+                        .WithMany()
+                        .HasForeignKey("Causa_Muerte_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", null)
+                        .WithMany()
+                        .HasForeignKey("Evento_Ganadero_Codigo")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -1182,6 +2225,34 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetallePalpacion", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", "Evento_Ganadero")
+                        .WithOne()
+                        .HasForeignKey("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetallePalpacion", "Evento_Ganadero_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.PalpacionResultado", "Palpacion_Resultado")
+                        .WithMany()
+                        .HasForeignKey("Palpacion_Resultado_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Evento_Ganadero");
+
+                    b.Navigation("Palpacion_Resultado");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetallePesaje", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", null)
+                        .WithMany()
+                        .HasForeignKey("Evento_Ganadero_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleRegistroExistente", b =>
                 {
                     b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.CategoriaAnimal", null)
@@ -1211,6 +2282,63 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                     b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.TipoIdentificador", null)
                         .WithMany()
                         .HasForeignKey("Tipo_Identificador_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleTrasladoFinca", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", null)
+                        .WithMany()
+                        .HasForeignKey("Evento_Ganadero_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleTratamientoSanitario", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", "Evento_Ganadero")
+                        .WithOne()
+                        .HasForeignKey("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleTratamientoSanitario", "Evento_Ganadero_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.TratamientoProducto", "Tratamiento_Producto")
+                        .WithMany()
+                        .HasForeignKey("Tratamiento_Producto_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Evento_Ganadero");
+
+                    b.Navigation("Tratamiento_Producto");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleVacunacion", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.VacunaEnfermedad", null)
+                        .WithMany()
+                        .HasForeignKey("Evento_Detalle_Vacunacion_Enfermedad_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.Vacuna", null)
+                        .WithMany()
+                        .HasForeignKey("Evento_Detalle_Vacunacion_Vacuna_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", null)
+                        .WithMany()
+                        .HasForeignKey("Evento_Ganadero_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoDetalleVenta", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.EventoGanadero", null)
+                        .WithMany()
+                        .HasForeignKey("Evento_Ganadero_Codigo")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -1266,6 +2394,27 @@ namespace Gestion.Ganadera.Business.Infrastructure.Persistence.Migrations
                         .HasForeignKey("Finca_Codigo")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.TratamientoProducto", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.TratamientoTipo", "Tratamiento_Tipo")
+                        .WithMany()
+                        .HasForeignKey("Tratamiento_Tipo_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tratamiento_Tipo");
+                });
+
+            modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Ganaderia.Vacuna", b =>
+                {
+                    b.HasOne("Gestion.Ganadera.Business.Domain.Features.Ganaderia.VacunaEnfermedad", "Vacuna_Enfermedad")
+                        .WithMany()
+                        .HasForeignKey("Vacuna_Enfermedad_Codigo")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Vacuna_Enfermedad");
                 });
 
             modelBuilder.Entity("Gestion.Ganadera.Business.Domain.Features.Navegacion.MenuNavegacion", b =>
